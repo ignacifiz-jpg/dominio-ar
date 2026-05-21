@@ -120,10 +120,8 @@ export const mapaCss = `
 .dec-ring { fill:none;stroke:rgba(192,106,34,.07);stroke-width:.6; }
 
 /* Teardrop pins */
-@keyframes pin-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
 @keyframes ring-out1 { 0%{r:14;opacity:.6;stroke-width:1.5} 100%{r:30;opacity:0;stroke-width:.3} }
 @keyframes ring-out2 { 0%{r:14;opacity:.4;stroke-width:1.2} 100%{r:24;opacity:0;stroke-width:.2} }
-.pin-float { animation:pin-float 2.4s ease-in-out infinite; transform-box:fill-box; transform-origin:center bottom; }
 .p-r1 { animation:ring-out1 2.4s ease-out infinite; }
 .p-r2 { animation:ring-out2 2.4s ease-out infinite .8s; }
 
@@ -282,12 +280,8 @@ export function MapaArgentina({terrenos=[],onVerFicha,lang,onGoCondominios}){
                 <stop offset="100%" stopColor="rgba(0,0,0,0)"/>
               </radialGradient>
               {/* Glow filter */}
-              <filter id="pin-gf3" x="-120%" y="-120%" width="340%" height="340%">
-                <feGaussianBlur stdDeviation="4.5" result="b"/>
-                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-              </filter>
-              <filter id="pin-strong" x="-150%" y="-150%" width="400%" height="400%">
-                <feGaussianBlur stdDeviation="7" result="b"/>
+              <filter id="pin-gf3" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="2.5" result="b"/>
                 <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
               </filter>
             </defs>
@@ -337,8 +331,8 @@ export function MapaArgentina({terrenos=[],onVerFicha,lang,onGoCondominios}){
                     <ellipse cx={px} cy={py+17} rx="8" ry="3" fill="rgba(0,0,0,.5)"/>
 
                     {/* Teardrop pin */}
-                    <g filter={is||ih?"url(#pin-strong)":"url(#pin-gf3)"}
-                       className={is||ih?"":"pin-float"}
+                    <g filter="url(#pin-gf3)"
+                       
                        transform={`translate(${px},${py-2})`}>
                       <path d={PIN_PATH} fill="url(#gpin3)"
                         stroke={is?"#fff8cc":ih?"#ffe080":"#f0c060"}
