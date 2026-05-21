@@ -500,7 +500,7 @@ async function geocodeTerrain(t) {
     </div>
 
     {page==="inicio"&&<>
-      <MapaArgentina terrenos={data} lang={lang} onVerFicha={(t)=>{setSel(t);go("condominios");}} onGoCondominios={()=>go("condominios")}/>
+      <MapaArgentina terrenos={data} lang={lang} onVerFicha={(t)=>{setPage("condominios");setSel(t);window.scrollTo(0,0);}} onGoCondominios={()=>go("condominios")}/>
 
       <section className="sec sc">
         <div className="sh"><div className="stag">{es?"Proceso claro y transparente":"Clear & transparent process"}</div>
