@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { AuthModal, UserNavBtn, authCss } from "./Auth.jsx";
 import { MediaUpload, mediaCss } from "./MediaUpload.jsx";
 import { MapaArgentina, mapaCss } from "./MapaArgentina.jsx";
-import { db, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc } from "./firebase.js";
+import { db, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from "./firebase.js";
 
 const T = {
   es: {
@@ -382,28 +382,52 @@ export default function App(){
   const[loadingData,setLoadingData]=useState(true);
 
   // Load fracciones from Firestore on mount
+
+// Geocoding: convierte ubicacion/zona a coordenadas aproximadas via Nominatim
+const geocodeCache = {};
+async function geocodeTerrain(t) {
+  if (t.coordenadas && t.coordenadas.trim()) return t; // ya tiene coords exactas
+  const key = t.ubicacion + t.zona;
+  if (geocodeCache[key]) return { ...t, coordenadasAprox: geocodeCache[key] };
+  try {
+    // Extraer ciudad/provincia de ubicacion
+    const parts = (t.ubicacion || "").split("—");
+    const lugar = (parts[parts.length - 1] || t.zona || "Argentina").trim();
+    const q = encodeURIComponent(lugar + ", Argentina");
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${q}&format=json&limit=1&countrycodes=ar`);
+    const data = await res.json();
+    if (data && data[0]) {
+      const coords = `${data[0].lat}, ${data[0].lon}`;
+      geocodeCache[key] = coords;
+      return { ...t, coordenadasAprox: coords };
+    }
+  } catch(e) { console.warn("Geocode error:", e); }
+  return t;
+}
+
   useEffect(()=>{
-    async function loadData(){
+    async function initData(){
       try{
         const snap = await getDocs(collection(db,"fracciones"));
         if(snap.empty){
-          // First time: seed with initial data
           for(const item of INIT){
             const {id,...rest}=item;
             await addDoc(collection(db,"fracciones"),rest);
           }
-          const snap2 = await getDocs(collection(db,"fracciones"));
-          setData(snap2.docs.map(d=>({...d.data(),id:d.id})));
-        } else {
-          setData(snap.docs.map(d=>({...d.data(),id:d.id})));
         }
-      }catch(e){
-        console.error("Error cargando datos:",e);
-        setData(INIT); // fallback
-      }
-      setLoadingData(false);
+      }catch(e){ console.error(e); }
     }
-    loadData();
+    initData().then(()=>{
+      // Escucha en tiempo real — se actualiza solo cuando hay cambios
+      const unsub = onSnapshot(collection(db,"fracciones"), async (snap)=>{
+        const items = snap.docs.map(d=>({...d.data(),id:d.id}));
+        // Geocodificar los que no tienen coordenadas exactas
+        const withCoords = await Promise.all(items.map(t=>geocodeTerrain(t)));
+        setData(withCoords);
+        setLoadingData(false);
+      }, (e)=>{ console.error(e); setData(INIT); setLoadingData(false); });
+      return ()=>unsub();
+    });
   },[]);
   const[sel,setSel]=useState(null);
   const[srch,setSrch]=useState("");const[filt,setFilt]=useState("Todos");
