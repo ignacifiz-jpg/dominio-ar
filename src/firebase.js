@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "firebase/auth";
-import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
+import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from "firebase/firestore";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
 
 const firebaseConfig = {
@@ -20,5 +20,5 @@ export const storage = getStorage(app);
 export const googleProvider = new GoogleAuthProvider();
 
 export { signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile };
-export { collection, getDocs, addDoc, updateDoc, deleteDoc, doc };
+export { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot };
 export { ref, uploadBytesResumable, getDownloadURL, deleteObject };
