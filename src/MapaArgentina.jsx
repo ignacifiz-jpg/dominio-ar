@@ -4,7 +4,6 @@ const toX = lng => ((lng + 73.5) / 20.0) * 400;
 const toY = lat => ((lat + 21.8) / (-33.7)) * 820;
 const pt  = (lat, lng) => `${Math.round(toX(lng))},${Math.round(toY(lat))}`;
 
-// Borde exterior de Argentina
 const OUTER = [
   [-21.8,-69.6],[-21.8,-67.0],[-21.8,-65.1],[-21.8,-62.3],
   [-22.5,-60.0],[-24.0,-58.5],[-27.4,-58.2],[-27.5,-57.6],
@@ -20,25 +19,48 @@ const OUTER = [
   [-38.5,-70.9],[-36.0,-70.5],[-34.5,-70.0],
   [-32.0,-70.0],[-30.0,-70.0],[-28.0,-69.5],
   [-26.0,-68.0],[-24.5,-68.5],[-22.0,-67.5],[-21.8,-69.6],
-].map(([a,b]) => pt(a,b)).join(" ");
+].map(([a,b])=>pt(a,b)).join(" ");
+
+// Regiones con fill separado para poder darles gradiente individual
+const REGIONES = [
+  // NOA
+  { id:"noa", pts:[[-21.8,-69.6],[-21.8,-65.1],[-28.0,-65.0],[-28.0,-69.5],[-26.0,-68.0],[-24.5,-68.5],[-22.0,-67.5]] },
+  // NEA norte
+  { id:"nea1", pts:[[-21.8,-62.3],[-21.8,-65.1],[-28.0,-65.0],[-28.0,-62.0]] },
+  // NEA este (Misiones/Corrientes)
+  { id:"nea2", pts:[[-21.8,-62.3],[-27.4,-58.2],[-27.5,-57.6],[-26.0,-53.6],[-27.0,-53.6],[-28.2,-54.2],[-30.5,-57.8],[-28.0,-62.0]] },
+  // Centro oeste (SJ, Mendoza)
+  { id:"coe", pts:[[-28.0,-69.5],[-28.0,-65.0],[-34.0,-65.0],[-34.5,-70.0],[-32.0,-70.0],[-30.0,-70.0]] },
+  // Centro (Córdoba, SF, SL)
+  { id:"cen", pts:[[-28.0,-65.0],[-28.0,-62.0],[-30.5,-57.8],[-33.0,-58.2],[-34.0,-58.4],[-34.0,-62.0],[-34.0,-65.0]] },
+  // Buenos Aires + LP
+  { id:"bue", pts:[[-34.0,-70.0],[-34.0,-65.0],[-34.0,-62.0],[-34.0,-58.4],[-35.0,-56.7],[-36.5,-56.8],[-38.0,-57.5],[-39.5,-62.0],[-39.5,-65.0],[-39.5,-70.5]] },
+  // Neuquén / Río Negro
+  { id:"pat1", pts:[[-39.5,-70.5],[-39.5,-65.0],[-39.5,-62.0],[-40.8,-62.3],[-41.7,-65.0],[-45.0,-66.5],[-46.5,-73.5],[-44.0,-71.5],[-42.0,-71.5],[-40.5,-71.5]] },
+  // Chubut
+  { id:"pat2", pts:[[-46.5,-73.5],[-45.0,-66.5],[-47.0,-65.5],[-49.0,-67.5],[-51.5,-69.0],[-52.5,-68.8],[-52.5,-73.5],[-50.0,-73.5]] },
+  // Santa Cruz + TDF
+  { id:"pat3", pts:[[-52.5,-73.5],[-52.5,-68.8],[-54.0,-68.0],[-55.1,-68.5],[-55.1,-66.0],[-54.5,-65.5],[-53.5,-68.0]] },
+].map(r=>({...r, pts:r.pts.map(([a,b])=>pt(a,b)).join(" ")}));
 
 const LINES = [
-  [[-21.8,-65.1],[-26.0,-65.0]],
-  [[-21.8,-62.3],[-27.4,-58.2]],
-  [[-28.0,-69.5],[-28.0,-65.0],[-28.5,-61.0],[-30.5,-57.8]],
-  [[-32.0,-70.0],[-32.0,-65.5],[-32.0,-62.0]],
-  [[-34.0,-70.0],[-34.0,-65.0],[-34.0,-58.4]],
+  [[-21.8,-65.1],[-28.0,-65.0]],
+  [[-21.8,-62.3],[-28.0,-62.0]],
+  [[-28.0,-69.5],[-28.0,-65.0],[-28.0,-62.0]],
+  [[-30.0,-70.0],[-30.5,-57.8]],
+  [[-32.0,-70.0],[-32.0,-65.0],[-32.0,-62.0]],
+  [[-34.5,-70.0],[-34.0,-65.0],[-34.0,-62.0],[-34.0,-58.4]],
   [[-39.5,-70.5],[-39.5,-65.0],[-39.5,-62.0]],
   [[-45.0,-73.5],[-45.0,-70.0],[-45.0,-66.5]],
   [[-51.5,-72.0],[-51.5,-69.0]],
-  [[-28.0,-65.0],[-34.0,-65.0],[-39.5,-65.0]],
+  [[-28.0,-65.0],[-39.5,-65.0]],
   [[-28.0,-62.0],[-34.0,-62.0],[-39.5,-62.0]],
-].map(c => "M"+c.map(([a,b])=>pt(a,b)).join(" L"));
+].map(c=>"M"+c.map(([a,b])=>pt(a,b)).join(" L"));
 
 export const mapaCss = `
 .hmapa {
   min-height:100vh;
-  background:radial-gradient(ellipse at 20% 50%, #180700 0%, #080300 60%, #000 100%);
+  background:radial-gradient(ellipse at 20% 50%,#190800 0%,#080300 60%,#000 100%);
   display:grid;
   grid-template-columns:1fr 1fr;
   align-items:center;
@@ -49,12 +71,12 @@ export const mapaCss = `
 }
 .hmapa::before {
   content:'';position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(ellipse at 68% 45%,rgba(130,50,5,.1) 0%,transparent 55%);
+  background:radial-gradient(ellipse at 65% 48%,rgba(120,45,5,.12) 0%,transparent 55%);
 }
 .hm-l{z-index:2;}
 .hm-r{z-index:2;display:flex;align-items:center;justify-content:center;position:relative;}
 
-/* MAP — sin caja, sin borde, integrado */
+/* MAP */
 .ar-map-outer {
   position:relative;
   width:100%;
@@ -62,55 +84,73 @@ export const mapaCss = `
 }
 .ar-map-glow {
   position:absolute;
-  inset:-15%;
-  background:radial-gradient(ellipse,rgba(180,70,5,.18) 0%,transparent 65%);
-  filter:blur(30px);
+  inset:-20%;
+  background:radial-gradient(ellipse,rgba(160,60,5,.2) 0%,transparent 65%);
+  filter:blur(35px);
   pointer-events:none;
 }
 .ar-svg {
   display:block;
   width:100%;
   overflow:visible;
-  filter:drop-shadow(0 0 28px rgba(192,106,34,.25));
+  filter:
+    drop-shadow(0 0 40px rgba(192,106,34,.3))
+    drop-shadow(0 0 15px rgba(232,168,76,.15))
+    drop-shadow(0 20px 60px rgba(0,0,0,.8));
 }
-.ar-bg { fill:#0e0600; }
-.ar-fill { fill:#1a0c02; }
-.ar-border { fill:none;stroke:#c06a22;stroke-width:.85;stroke-linejoin:round; }
-.ar-glow-line { fill:none;stroke:#e8a84c;stroke-width:.3;stroke-linejoin:round;opacity:.45; }
-.ar-div { fill:none;stroke:#c06a22;stroke-width:.45;stroke-linecap:round;opacity:.5; }
 
-/* PINS */
-@keyframes ro1 { 0%{r:9;opacity:.65;stroke-width:1.2} 100%{r:25;opacity:0;stroke-width:.2} }
-@keyframes ro2 { 0%{r:9;opacity:.42;stroke-width:1} 100%{r:18;opacity:0;stroke-width:.2} }
-@keyframes pp  { 0%,100%{opacity:1} 50%{opacity:.8} }
-.p-r1{animation:ro1 2.5s ease-out infinite;}
-.p-r2{animation:ro2 2.5s ease-out infinite .85s;}
-.p-core{animation:pp 2.2s ease-in-out infinite;}
+/* Province fills */
+.reg-noa  { fill:url(#g-noa); }
+.reg-nea1 { fill:url(#g-nea1); }
+.reg-nea2 { fill:url(#g-nea2); }
+.reg-coe  { fill:url(#g-coe); }
+.reg-cen  { fill:url(#g-cen); }
+.reg-bue  { fill:url(#g-bue); }
+.reg-pat1 { fill:url(#g-pat1); }
+.reg-pat2 { fill:url(#g-pat2); }
+.reg-pat3 { fill:url(#g-pat3); }
 
-/* POPUP — flotante sobre el mapa, centrado */
+/* Borders */
+.ar-border-glow { fill:none;stroke:#e8a84c;stroke-width:.5;stroke-linejoin:round;opacity:.55; }
+.ar-border      { fill:none;stroke:#c06a22;stroke-width:.9;stroke-linejoin:round; }
+.ar-div         { fill:none;stroke:#c06a22;stroke-width:.45;stroke-linecap:round;opacity:.45; }
+.ar-div-glow    { fill:none;stroke:#e8a84c;stroke-width:.2;stroke-linecap:round;opacity:.3; }
+
+/* Decorative rings */
+.dec-ring { fill:none;stroke:rgba(192,106,34,.07);stroke-width:.6; }
+
+/* Teardrop pins */
+@keyframes pin-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
+@keyframes ring-out1 { 0%{r:14;opacity:.6;stroke-width:1.5} 100%{r:30;opacity:0;stroke-width:.3} }
+@keyframes ring-out2 { 0%{r:14;opacity:.4;stroke-width:1.2} 100%{r:24;opacity:0;stroke-width:.2} }
+.pin-float { animation:pin-float 2.4s ease-in-out infinite; transform-box:fill-box; transform-origin:center bottom; }
+.p-r1 { animation:ring-out1 2.4s ease-out infinite; }
+.p-r2 { animation:ring-out2 2.4s ease-out infinite .8s; }
+
+/* Popup */
 .ar-popup {
   position:absolute;
   left:50%;
   top:50%;
-  transform:translate(-50%,-120%);
+  transform:translate(-50%,-118%);
   background:rgba(4,1,0,.98);
   border:1px solid rgba(232,168,76,.6);
   border-radius:12px;
   padding:1rem 1.2rem;
-  min-width:260px;
+  min-width:265px;
   max-width:320px;
   z-index:100;
   box-shadow:0 12px 40px rgba(0,0,0,.85),0 0 20px rgba(192,106,34,.15);
   pointer-events:all;
-  animation:pop-in .22s ease;
+  animation:pop-in .2s ease;
 }
-@keyframes pop-in{from{opacity:0;transform:translate(-50%,-110%)}to{opacity:1;transform:translate(-50%,-120%)}}
+@keyframes pop-in{from{opacity:0;transform:translate(-50%,-108%)}to{opacity:1;transform:translate(-50%,-118%)}}
+.pop-close{position:absolute;top:.5rem;right:.6rem;background:none;border:none;color:rgba(245,237,224,.4);cursor:pointer;font-size:.9rem;}
+.pop-close:hover{color:#e8a84c;}
 .pop-cod{color:#e8a84c;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;font-weight:700;margin-bottom:.1rem;}
 .pop-nom{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:#f5ede0;margin-bottom:.15rem;font-weight:600;}
 .pop-loc{color:rgba(245,237,224,.45);font-size:.7rem;margin-bottom:.6rem;}
 .pop-btns{display:flex;gap:.4rem;flex-wrap:wrap;}
-.pop-close{position:absolute;top:.5rem;right:.6rem;background:none;border:none;color:rgba(245,237,224,.4);cursor:pointer;font-size:.85rem;line-height:1;}
-.pop-close:hover{color:#e8a84c;}
 .btn-gm{background:#4285f4;color:#fff;border:none;padding:.35rem .8rem;border-radius:4px;font-family:'Jost',sans-serif;font-size:.7rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:.25rem;transition:all .18s;}
 .btn-gm:hover{background:#2a72e8;transform:translateY(-1px);}
 .btn-dr{background:linear-gradient(135deg,#a84010,#e8a84c);color:#fff;border:none;padding:.35rem .8rem;border-radius:4px;font-family:'Jost',sans-serif;font-size:.7rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.25rem;transition:all .18s;box-shadow:0 2px 10px rgba(192,106,34,.4);}
@@ -118,15 +158,15 @@ export const mapaCss = `
 .btn-fi{background:transparent;color:#e8a84c;border:1px solid rgba(232,168,76,.35);padding:.35rem .8rem;border-radius:4px;font-family:'Jost',sans-serif;font-size:.7rem;font-weight:600;cursor:pointer;transition:all .18s;}
 .btn-fi:hover{background:rgba(232,168,76,.1);}
 
-/* HINT */
-.ar-hint{position:absolute;bottom:.4rem;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.55);color:rgba(245,237,224,.4);padding:.18rem .6rem;border-radius:2rem;font-size:.6rem;font-family:'Jost',sans-serif;pointer-events:none;white-space:nowrap;}
-
-/* TOOLTIP */
-.ar-tip{position:absolute;background:rgba(4,1,0,.96);border:1px solid rgba(192,106,34,.5);border-radius:8px;padding:.45rem .78rem;color:#f5ede0;font-family:'Jost',sans-serif;font-size:.72rem;pointer-events:none;white-space:nowrap;box-shadow:0 4px 18px rgba(0,0,0,.7);z-index:50;transform:translate(-50%,-115%);}
-.ar-tip::after{content:'';position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:rgba(192,106,34,.5);border-bottom:none;}
+/* Tooltip */
+.ar-tip{position:absolute;background:rgba(4,1,0,.97);border:1px solid rgba(192,106,34,.52);border-radius:8px;padding:.45rem .78rem;color:#f5ede0;font-family:'Jost',sans-serif;font-size:.72rem;pointer-events:none;white-space:nowrap;box-shadow:0 4px 18px rgba(0,0,0,.7);z-index:50;transform:translate(-50%,-115%);}
+.ar-tip::after{content:'';position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:rgba(192,106,34,.52);border-bottom:none;}
 .tip-c{color:#e8a84c;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;}
 .tip-n{font-weight:600;margin:.06rem 0;}
 .tip-p{color:#c06a22;font-weight:700;}
+
+/* Hint */
+.ar-hint{position:absolute;bottom:.4rem;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.55);color:rgba(245,237,224,.4);padding:.18rem .6rem;border-radius:2rem;font-size:.6rem;font-family:'Jost',sans-serif;pointer-events:none;white-space:nowrap;}
 
 /* LEFT */
 .hm-tag{display:inline-flex;align-items:center;gap:.45rem;background:rgba(192,106,34,.1);border:1px solid rgba(192,106,34,.3);color:#e8a84c;padding:.28rem .8rem;border-radius:2rem;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1.4rem;width:fit-content;}
@@ -140,23 +180,19 @@ export const mapaCss = `
 .hm-trust{display:flex;flex-direction:column;gap:.4rem;}
 .ht-i{display:flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.035);border:1px solid rgba(192,106,34,.18);border-radius:6px;padding:.42rem .78rem;color:rgba(245,237,224,.7);font-size:.76rem;}
 .ht-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
-
-/* DRONE */
 .dov{position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.95);display:flex;align-items:center;justify-content:center;padding:2rem;}
 .dbox{position:relative;max-width:940px;width:100%;}
 .dbox video{width:100%;border-radius:9px;max-height:82vh;}
 .dx{position:absolute;top:-2.5rem;right:0;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:.83rem;padding:.32rem .8rem;border-radius:4px;cursor:pointer;font-family:'Jost',sans-serif;}
-
-@media(max-width:850px){
-  .hmapa{grid-template-columns:1fr;padding:5rem 1.4rem 5rem;min-height:auto;gap:2rem;}
-  .hm-trust{display:none;}
-  .ar-popup{min-width:230px;max-width:90vw;}
-}
+@media(max-width:850px){.hmapa{grid-template-columns:1fr;padding:5rem 1.4rem 5rem;min-height:auto;gap:2rem;}.hm-trust{display:none;}.ar-popup{min-width:230px;max-width:90vw;}}
 @media(max-width:420px){.hm-h1{font-size:2rem;}.hm-stats{gap:1.2rem;}}
 `;
 
 function hasVid(m){return m?.some(x=>x.tipo==="video");}
 function getVid(m){return m?.find(x=>x.tipo==="video");}
+
+// Teardrop pin path (punta hacia abajo, centrado en 0,0)
+const PIN_PATH = "M0,-16 C7,-16 13,-10 13,-4 C13,4 0,16 0,16 C0,16 -13,4 -13,-4 C-13,-10 -7,-16 0,-16 Z";
 
 export function MapaArgentina({terrenos=[],onVerFicha,lang,onGoCondominios}){
   const es=lang==="es";
@@ -182,11 +218,23 @@ export function MapaArgentina({terrenos=[],onVerFicha,lang,onGoCondominios}){
     const{lat,lng}=parsell(t.coordenadas);
     const px=toX(lng), py=toY(lat);
     const s=2.8;
-    // Center pin at (200, 380) in SVG coords
     setZoom({s, tx:200-px*s, ty:380-py*s});
   }
 
   function resetView(){setSel(null);setZoom({s:1,tx:0,ty:0});}
+
+  // Gradients config per region [light-color, dark-color, cx, cy]
+  const GRADS = [
+    ["noa",   "#2e1508","#120800", "70%","30%"],
+    ["nea1",  "#2a1206","#110700", "60%","25%"],
+    ["nea2",  "#321708","#140900", "55%","35%"],
+    ["coe",   "#261005","#0e0600", "65%","40%"],
+    ["cen",   "#2c1407","#130800", "60%","50%"],
+    ["bue",   "#301608","#140900", "55%","45%"],
+    ["pat1",  "#1e0d04","#0a0400", "60%","55%"],
+    ["pat2",  "#180b03","#090300", "55%","60%"],
+    ["pat3",  "#140902","#070200", "50%","65%"],
+  ];
 
   return(<>
     <section className="hmapa">
@@ -215,17 +263,31 @@ export function MapaArgentina({terrenos=[],onVerFicha,lang,onGoCondominios}){
           <div className="ar-map-glow"/>
           <svg ref={svgRef} viewBox="0 0 400 760" className="ar-svg">
             <defs>
-              <radialGradient id="rbg2" cx="42%" cy="35%" r="58%">
-                <stop offset="0%" stopColor="#200e02"/>
-                <stop offset="100%" stopColor="#060200"/>
+              {/* Gradientes por región */}
+              {GRADS.map(([id,light,dark,cx,cy])=>(
+                <radialGradient key={id} id={`g-${id}`} cx={cx} cy={cy} r="70%">
+                  <stop offset="0%" stopColor={light}/>
+                  <stop offset="100%" stopColor={dark}/>
+                </radialGradient>
+              ))}
+              {/* Pin gradient */}
+              <radialGradient id="gpin3" cx="35%" cy="28%" r="65%">
+                <stop offset="0%" stopColor="#fff5aa"/>
+                <stop offset="40%" stopColor="#f0a830"/>
+                <stop offset="100%" stopColor="#8a3808"/>
               </radialGradient>
-              <radialGradient id="rpin2" cx="36%" cy="30%" r="65%">
-                <stop offset="0%" stopColor="#ffe07a"/>
-                <stop offset="50%" stopColor="#e8a84c"/>
-                <stop offset="100%" stopColor="#9a4208"/>
+              {/* Pin shadow */}
+              <radialGradient id="gpin-shad" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="rgba(232,168,76,.4)"/>
+                <stop offset="100%" stopColor="rgba(0,0,0,0)"/>
               </radialGradient>
-              <filter id="pgf2" x="-80%" y="-80%" width="260%" height="260%">
-                <feGaussianBlur stdDeviation="4" result="b"/>
+              {/* Glow filter */}
+              <filter id="pin-gf3" x="-120%" y="-120%" width="340%" height="340%">
+                <feGaussianBlur stdDeviation="4.5" result="b"/>
+                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+              <filter id="pin-strong" x="-150%" y="-150%" width="400%" height="400%">
+                <feGaussianBlur stdDeviation="7" result="b"/>
                 <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
               </filter>
             </defs>
@@ -233,43 +295,68 @@ export function MapaArgentina({terrenos=[],onVerFicha,lang,onGoCondominios}){
             <g style={{
               transform:`translate(${zoom.tx}px,${zoom.ty}px) scale(${zoom.s})`,
               transformOrigin:"0 0",
-              transition:"transform 0.55s cubic-bezier(.4,0,.2,1)"
+              transition:"transform 0.6s cubic-bezier(.4,0,.2,1)"
             }}>
-              {/* Fondo */}
-              <polygon points={OUTER} fill="url(#rbg2)"/>
-              {/* Relleno interior */}
-              <polygon points={OUTER} className="ar-fill"/>
+              {/* Anillos decorativos */}
+              {[80,140,200,265,330].map(r=>(
+                <circle key={r} cx="200" cy="380" r={r} className="dec-ring"/>
+              ))}
+
+              {/* Regiones con gradiente */}
+              {REGIONES.map(r=>(
+                <polygon key={r.id} points={r.pts} className={`reg-${r.id}`}/>
+              ))}
+
+              {/* Líneas de provincias — glow */}
+              {LINES.map((d,i)=><path key={`dg${i}`} d={d} className="ar-div-glow"/>)}
               {/* Líneas de provincias */}
-              {LINES.map((d,i)=><path key={i} d={d} className="ar-div"/>)}
-              {/* Borde glow */}
-              <polygon points={OUTER} className="ar-glow-line"/>
-              {/* Borde principal */}
+              {LINES.map((d,i)=><path key={`d${i}`} d={d} className="ar-div"/>)}
+
+              {/* Borde exterior glow */}
+              <polygon points={OUTER} className="ar-border-glow"/>
+              {/* Borde exterior */}
               <polygon points={OUTER} className="ar-border"/>
 
-              {/* Pins */}
+              {/* Pins — teardrop style */}
               {wc.map(t=>{
                 const{lat,lng}=parsell(t.coordenadas);
-                const px=Math.round(toX(lng)), py=Math.round(toY(lat));
+                const px=Math.round(toX(lng));
+                const py=Math.round(toY(lat));
                 const is=sel?.id===t.id, ih=hov?.id===t.id;
                 return(
-                  <g key={t.id} filter="url(#pgf2)" style={{cursor:"pointer"}}
+                  <g key={t.id} style={{cursor:"pointer"}}
                     onMouseEnter={e=>{e.stopPropagation();onPinEnter(t,e);}}
                     onMouseLeave={e=>{e.stopPropagation();setHov(null);}}
                     onClick={e=>{e.stopPropagation();onPinClick(t);}}>
-                    <circle cx={px} cy={py} r="9" fill="none" stroke="#e8a84c" strokeWidth="1.2" className="p-r1"/>
-                    <circle cx={px} cy={py} r="9" fill="none" stroke="#c06a22" strokeWidth=".8" className="p-r2"/>
-                    {(is||ih)&&<circle cx={px} cy={py} r="13" fill="rgba(232,168,76,.1)" stroke="rgba(232,168,76,.25)" strokeWidth=".7"/>}
-                    <circle cx={px} cy={py} r={is?7.5:ih?6.5:5.5}
-                      fill="url(#rpin2)" stroke={is?"#fff5cc":"#f5ede0"}
-                      strokeWidth={is?1.8:1.3}
-                      className={is||ih?"":"p-core"}
-                      style={{transition:"r .2s"}}/>
-                    <circle cx={px-1} cy={py-1.5} r={is?2.5:2} fill="rgba(255,246,170,.88)"/>
-                    {(is||ih)&&<text x={px+11} y={py-7} fontSize="5.5" fill="#f5ede0"
-                      fontFamily="Jost,sans-serif" fontWeight="600"
-                      style={{filter:"drop-shadow(0 1px 4px rgba(0,0,0,.95))"}}>
-                      {(t.nombre||"").split("—")[0].trim().substring(0,20)}
-                    </text>}
+
+                    {/* Glow rings */}
+                    <circle cx={px} cy={py} r="14" fill="none" stroke="#e8a84c" strokeWidth="1.2" className="p-r1"/>
+                    <circle cx={px} cy={py} r="14" fill="none" stroke="#c06a22" strokeWidth=".8" className="p-r2"/>
+
+                    {/* Shadow under pin */}
+                    <ellipse cx={px} cy={py+17} rx="8" ry="3" fill="rgba(0,0,0,.5)"/>
+
+                    {/* Teardrop pin */}
+                    <g filter={is||ih?"url(#pin-strong)":"url(#pin-gf3)"}
+                       className={is||ih?"":"pin-float"}
+                       transform={`translate(${px},${py-2})`}>
+                      <path d={PIN_PATH} fill="url(#gpin3)"
+                        stroke={is?"#fff8cc":ih?"#ffe080":"#f0c060"}
+                        strokeWidth={is?1.5:1}/>
+                      {/* Dot inside pin */}
+                      <circle cx="0" cy="-4" r={is?4:3} fill="rgba(255,250,200,.9)"/>
+                      {/* Shine */}
+                      <ellipse cx="-3" cy="-9" rx="3" ry="2.5" fill="rgba(255,255,255,.35)" transform="rotate(-20,-3,-9)"/>
+                    </g>
+
+                    {/* Label on hover/select */}
+                    {(is||ih)&&(
+                      <text x={px+18} y={py-5} fontSize="5.8" fill="#f5ede0"
+                        fontFamily="Jost,sans-serif" fontWeight="600"
+                        style={{filter:"drop-shadow(0 1px 4px rgba(0,0,0,.95))"}}>
+                        {(t.nombre||"").split("—")[0].trim().substring(0,22)}
+                      </text>
+                    )}
                   </g>
                 );
               })}
@@ -285,7 +372,7 @@ export function MapaArgentina({terrenos=[],onVerFicha,lang,onGoCondominios}){
             </div>
           )}
 
-          {/* Popup card — centrado sobre el mapa */}
+          {/* Popup centrado */}
           {sel&&(
             <div className="ar-popup">
               <button className="pop-close" onClick={resetView}>✕</button>
@@ -302,7 +389,9 @@ export function MapaArgentina({terrenos=[],onVerFicha,lang,onGoCondominios}){
             </div>
           )}
 
-          {!sel&&wc.length>0&&<div className="ar-hint">📍 {es?"Tocá un pin para ver el terreno":"Click a pin to view"}</div>}
+          {!sel&&wc.length>0&&(
+            <div className="ar-hint">📍 {es?"Tocá un pin para ver el terreno":"Click a pin to view"}</div>
+          )}
         </div>
       </div>
     </section>
