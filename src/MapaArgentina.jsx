@@ -182,8 +182,46 @@ export const mapaCss = `
 .dbox{position:relative;max-width:940px;width:100%;}
 .dbox video{width:100%;border-radius:9px;max-height:82vh;}
 .dx{position:absolute;top:-2.5rem;right:0;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:.83rem;padding:.32rem .8rem;border-radius:4px;cursor:pointer;font-family:'Jost',sans-serif;}
-@media(max-width:850px){.hmapa{grid-template-columns:1fr;padding:5rem 1.4rem 5rem;min-height:auto;gap:2rem;}.hm-trust{display:none;}.ar-popup{min-width:230px;max-width:90vw;}}
-@media(max-width:420px){.hm-h1{font-size:2rem;}.hm-stats{gap:1.2rem;}}
+@media(max-width:850px){
+  .hmapa{
+    grid-template-columns:1fr;
+    padding:4.5rem 1.2rem 3rem;
+    min-height:auto;
+    gap:1.5rem;
+  }
+  .hm-l{ order:1; }
+  .hm-r{ order:2; }
+  .hm-tag{ font-size:.62rem; padding:.25rem .7rem; }
+  .hm-h1{ font-size:2.2rem; margin-bottom:.8rem; }
+  .hm-d{ font-size:.88rem; margin-bottom:1.2rem; }
+  .hm-ctas{ flex-direction:column; gap:.6rem; }
+  .hm-ctas .bp,.hm-ctas .bg{ width:100%; text-align:center; padding:.85rem; }
+  .hm-stats{ gap:1.5rem; margin-bottom:1rem; }
+  .hm-trust{ display:none; }
+  /* Map compact on mobile */
+  .ar-map-outer{ max-width:280px; margin:0 auto; }
+  .ar-svg{ max-height:380px; }
+  /* Popup: bottom sheet on mobile */
+  .ar-popup{
+    position:fixed;
+    left:1rem; right:1rem;
+    bottom:1rem; top:auto;
+    transform:none;
+    min-width:unset;
+    max-width:unset;
+    width:auto;
+    border-radius:14px;
+    z-index:200;
+    animation:pop-up-mob .25s ease;
+  }
+  @keyframes pop-up-mob{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  .ar-hint{ font-size:.6rem; bottom:.3rem; }
+}
+@media(max-width:420px){
+  .hm-h1{ font-size:1.9rem; }
+  .hm-stats{ gap:1rem; }
+  .hs-n{ font-size:1.5rem; }
+}
 `;
 
 function hasVid(m){return m?.some(x=>x.tipo==="video");}
