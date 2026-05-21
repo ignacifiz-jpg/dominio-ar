@@ -201,7 +201,7 @@ export function MapaArgentina({terrenos=[],onVerFicha,lang,onGoCondominios}){
   const [droneUrl,setDroneUrl]=useState(null);
   const svgRef=useRef();
 
-  const wc=terrenos.filter(t=>t.coordenadas?.includes(","));
+  const wc=terrenos.filter(t=>(t.coordenadas?.includes(",")||t.coordenadasAprox?.includes(",")));
   function parsell(s){const p=s.split(",").map(v=>parseFloat(v.trim()));return{lat:p[0],lng:p[1]};}
 
   function onPinEnter(t,e){
@@ -213,7 +213,7 @@ export function MapaArgentina({terrenos=[],onVerFicha,lang,onGoCondominios}){
   function onPinClick(t){
     if(sel?.id===t.id){setSel(null);setZoom({s:1,tx:0,ty:0});return;}
     setSel(t);
-    const{lat,lng}=parsell(t.coordenadas);
+    const{lat,lng}=parsell(t.coordenadas||t.coordenadasAprox);
     const px=toX(lng), py=toY(lat);
     const s=2.8;
     setZoom({s, tx:200-px*s, ty:380-py*s});
@@ -313,7 +313,7 @@ export function MapaArgentina({terrenos=[],onVerFicha,lang,onGoCondominios}){
 
               {/* Pins — teardrop style */}
               {wc.map(t=>{
-                const{lat,lng}=parsell(t.coordenadas);
+                const{lat,lng}=parsell(t.coordenadas||t.coordenadasAprox);
                 const px=Math.round(toX(lng));
                 const py=Math.round(toY(lat));
                 const is=sel?.id===t.id, ih=hov?.id===t.id;
@@ -348,7 +348,7 @@ export function MapaArgentina({terrenos=[],onVerFicha,lang,onGoCondominios}){
                       <text x={px+18} y={py-5} fontSize="5.8" fill="#f5ede0"
                         fontFamily="Jost,sans-serif" fontWeight="600"
                         style={{filter:"drop-shadow(0 1px 4px rgba(0,0,0,.95))"}}>
-                        {(t.nombre||"").split("—")[0].trim().substring(0,22)}
+                        {(t.nombre||"").split("—")[0].trim().substring(0,22)}{!t.coordenadas&&t.coordenadasAprox?" ~":""}
                       </text>
                     )}
                   </g>
@@ -374,7 +374,7 @@ export function MapaArgentina({terrenos=[],onVerFicha,lang,onGoCondominios}){
               <div className="pop-nom">{sel.nombre}</div>
               <div className="pop-loc">📍 {sel.ubicacion}</div>
               <div className="pop-btns">
-                {sel.coordenadas&&(()=>{const{lat,lng}=parsell(sel.coordenadas);return(
+                {sel.coordenadas&&sel.coordenadas.trim()&&(()=>{const{lat,lng}=parsell(sel.coordenadas);return(
                   <button className="btn-gm" onClick={()=>window.open(`https://www.google.com/maps?q=${lat},${lng}`,"_blank")}>🗺️ Google Maps</button>
                 );})()}
                 {hasVid(sel.media)&&<button className="btn-dr" onClick={()=>setDroneUrl(getVid(sel.media).url)}>🚁 {es?"Dron":"Drone"}</button>}
