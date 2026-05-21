@@ -341,6 +341,14 @@ h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;}
 
   /* User dropdown */
   .user-dropdown{right:-1rem;min-width:200px;}
+
+  /* Hide old hero if still present */
+  .hero{padding:5rem 1.2rem 2.5rem;min-height:100svh;}
+  .hero-tag{font-size:.62rem;}
+  .hero h1{font-size:2.2rem;}
+  .hero-ctas{flex-direction:column;gap:.6rem;}
+  .hero-ctas .bp,.hero-ctas .bg{width:100%;text-align:center;}
+  .hero-trust,.hero-stats{display:none;}
 }
 
 /* ── SMALL MOBILE ── */
