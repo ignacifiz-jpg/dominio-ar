@@ -86,14 +86,16 @@ export const mapaCss = `
   background: radial-gradient(ellipse at 65% 48%, rgba(140,55,5,.09) 0%, transparent 55%);
 }
 .hm-l { z-index:2; }
-.hm-r { z-index:2; display:flex; align-items:center; justify-content:center; position:relative; }
+.hm-r { z-index:2; display:flex; align-items:center; justify-content:center; position:relative; max-height:calc(100vh - 80px); overflow:hidden; }
 
 /* MAP CONTAINER */
 .ar-map-wrap {
   position: relative;
   width: 100%;
-  max-width: 400px;
+  max-width: 380px;
   margin: 0 auto;
+  overflow: hidden;
+  border-radius: 4px;
 }
 .ar-map-glow {
   position: absolute;
@@ -251,13 +253,15 @@ export function MapaArgentina({ terrenos = [], onVerFicha, lang, onGoCondominios
     const { lat, lng } = parsell(t.coordenadas);
     const px = toX(lng), py = toY(lat);
     // Zoom to pin: scale 2.8x, centered on pin
-    const scale = 2.8;
-    const tx = SVG_W / 2 - px * scale;
-    const ty = SVG_H / 2 - py * scale - 30;
-    setZoomStyle({ transform: `translate(${tx}px, ${ty}px) scale(${scale})` });
+    const scale = 2.6;
+    // With transformOrigin 0,0: translate then scale
+    // To center pin (px,py): tx = 200 - px*scale, ty = 410 - py*scale
+    const tx = 200 - px * scale;
+    const ty = 410 - py * scale;
+    setZoomStyle({ transform: `translate(${tx}px, ${ty}px) scale(${scale})`, transformOrigin: '0 0' });
   }
 
-  function resetView() { setSel(null); setZoomStyle({}); }
+  function resetView() { setSel(null); setZoomStyle({ transform: "translate(0,0) scale(1)", transformOrigin: "0 0" }); }
 
   return (<>
     <section className="hmapa">
@@ -287,7 +291,7 @@ export function MapaArgentina({ terrenos = [], onVerFicha, lang, onGoCondominios
         <div className="ar-map-wrap" ref={wrapRef}>
           <div className="ar-map-glow" />
 
-          <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} className="ar-map-svg" style={{ overflow: "visible" }}>
+          <svg viewBox="0 0 400 820" className="ar-map-svg" preserveAspectRatio="xMidYMin meet" style={{ overflow: "hidden", maxHeight: "calc(100vh - 80px)", width: "100%" }}>
             <defs>
               <radialGradient id="m-bg" cx="45%" cy="38%" r="58%">
                 <stop offset="0%" stopColor="#221005" />
@@ -305,7 +309,7 @@ export function MapaArgentina({ terrenos = [], onVerFicha, lang, onGoCondominios
             </defs>
 
             {/* Zoom group */}
-            <g className="ar-map-zoom" style={zoomStyle}>
+            <g className="ar-map-zoom" style={{...zoomStyle, transformOrigin: zoomStyle.transformOrigin || "center center"}}>
               {/* Background */}
               <polygon points={CONTINENTAL} fill="url(#m-bg)" />
 
