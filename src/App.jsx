@@ -872,7 +872,17 @@ async function geocodeTerrain(t) {
         <div className="sb3">
           <div style={{textAlign:"center",marginBottom:"2.5rem"}}>
             <div className="stag stag-l">{es?"Servicios disponibles":"Available services"}</div>
-            <h3 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"2rem",color:"#0f0a06",marginTop:".5rem"}}>{es?"Elegí tu verificación de terreno":"Choose your land verification"}</h3>
+            <h3 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"2rem",color:"#0f0a06",marginTop:".5rem",marginBottom:"1rem"}}>{es?"Elegí tu verificación de terreno":"Choose your land verification"}</h3>
+            <div style={{display:"inline-flex",background:"#f0ebe4",borderRadius:"2rem",padding:".25rem",gap:".25rem",border:"1px solid rgba(192,106,34,.2)"}}>
+              {["EUR","USD"].map(c=>(
+                <button key={c} onClick={()=>setMoneda(c)}
+                  style={{padding:".35rem 1.1rem",borderRadius:"2rem",border:"none",cursor:"pointer",fontFamily:"'Jost',sans-serif",fontWeight:600,fontSize:".78rem",transition:"all .2s",
+                    background:moneda===c?"#c06a22":"transparent",color:moneda===c?"white":"#6b5240"}}>
+                  {c==="EUR"?"🇪🇺 EUR":"🇦🇷 USD"}
+                </button>
+              ))}
+            </div>
+            <p style={{color:"#8a6a4a",fontSize:".75rem",marginTop:".5rem"}}>{moneda==="EUR"?es?"Precios para Europa":"Prices for Europe":es?"Precios para Argentina":"Prices for Argentina"}</p>
           </div>
           <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"1.2rem",alignItems:"stretch"}}>
             {(es?[
