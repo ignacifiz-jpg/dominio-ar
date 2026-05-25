@@ -711,40 +711,111 @@ async function geocodeTerrain(t) {
     </div>}
 
     {page==="valoracion"&&<div style={{paddingTop:64}}>
-      <div className="sh2"><div className="stag stag-l">{es?"Tasación profesional":"Professional appraisal"}</div>
-      <h2 className="stit stit-l">{t.valorTitle} <em>{t.valorTitleEm}</em></h2>
-      <p className="sdesc sdesc-l">{es?"Determinamos el valor de mercado de tu propiedad con criterios actualizados y referencia real.":"We determine the market value of your property with up-to-date criteria and real references."}</p></div>
-      <section className="sec sc"><div className="sb3">
-        <div className="ig">{(es?[["📍","Análisis de zona","Estudiamos el mercado de la zona, caminos, accesos y entorno."],["📄","Estado documental","Evaluamos escritura, impuestos, mensura y estado registral."],["💹","Valor de mercado","Comparamos con ventas reales de la zona."],["📋","Informe escrito","Entregamos un informe detallado con fundamentos."]]:
-          [["📍","Zone analysis","We study the area market, roads and surroundings."],["📄","Doc status","We evaluate deed, taxes, survey and registry."],["💹","Market value","We compare with real sales in the area."],["📋","Written report","We deliver a detailed valuation report."]]).map(([ic,ti,de],i)=>(
-          <div className="ic2" key={i}><div style={{fontSize:"1.8rem",marginBottom:"0.6rem"}}>{ic}</div><h4>{ti}</h4><p>{de}</p></div>
-        ))}</div>
-        <div className="fc" style={{marginTop:"2rem"}}>
-          <h3>{es?"Solicitá una valoración":"Request a valuation"}</h3>
-          <form onSubmit={e=>sub(e,es?"Solicitud de valoración":"Valuation request")}>
-            <div className="fr">
-              <div className="fg"><label className="lb lb-d">{es?"Nombre":"Name"}</label><input className="fi fi-l" placeholder={es?"Tu nombre":"Your name"} value={vf.nombre} onChange={e=>setVf({...vf,nombre:e.target.value})}/></div>
-              <div className="fg"><label className="lb lb-d">Email</label><input className="fi fi-l" type="email" placeholder="tu@email.com" value={vf.email} onChange={e=>setVf({...vf,email:e.target.value})}/></div>
-            </div>
-            <div className="fr">
-              <div className="fg"><label className="lb lb-d">{es?"Teléfono":"Phone"}</label><input className="fi fi-l" placeholder="+54 9 ..." value={vf.tel} onChange={e=>setVf({...vf,tel:e.target.value})}/></div>
-              <div className="fg"><label className="lb lb-d">{es?"Provincia":"Province"}</label><input className="fi fi-l" placeholder="Chaco, Salta..." value={vf.prov} onChange={e=>setVf({...vf,prov:e.target.value})}/></div>
-            </div>
-            <div className="fr">
-              <div className="fg"><label className="lb lb-d">{es?"Superficie":"Surface"}</label><input className="fi fi-l" placeholder="2 Ha / 5.000 m²" value={vf.sup} onChange={e=>setVf({...vf,sup:e.target.value})}/></div>
-              <div className="fg"><label className="lb lb-d">{es?"Tipo":"Type"}</label>
-                <select className="fse fse-l" value={vf.tipo} onChange={e=>setVf({...vf,tipo:e.target.value})}>
-                  <option value="">{es?"Seleccioná...":"Select..."}</option>
-                  <option>{es?"Rural / Campo":"Rural / Field"}</option>
-                  <option>{es?"Periurbano":"Peri-urban"}</option>
-                  <option>{es?"Monte / Forestal":"Forest / Woodland"}</option>
-                </select>
+      {/* HERO */}
+      <div style={{background:"linear-gradient(135deg,#1a0d02 0%,#2d1708 50%,#1a0d02 100%)",padding:"4rem 2rem",textAlign:"center",position:"relative",overflow:"hidden"}}>
+        <div style={{position:"absolute",inset:0,background:"radial-gradient(ellipse at 50% 0%,rgba(192,106,34,.15) 0%,transparent 65%)",pointerEvents:"none"}}/>
+        <div className="stag stag-l" style={{marginBottom:"1rem",display:"inline-flex"}}>{es?"Tasación profesional":"Professional appraisal"}</div>
+        <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(2.2rem,4vw,3.5rem)",color:"#f5ede0",lineHeight:1.1,marginBottom:"1.2rem"}}>
+          {es?"Conocé el valor real de":"Know the real value of"}<br/><em style={{color:"#e8a84c",fontStyle:"italic"}}>{es?"tu terreno":"your land"}</em>
+        </h2>
+        <p style={{color:"rgba(245,237,224,.65)",fontSize:"1rem",lineHeight:1.8,maxWidth:540,margin:"0 auto"}}>
+          {es?"Determinamos el valor de mercado con criterios actualizados, comparables reales y análisis documental. Tres niveles según tu necesidad.":"We determine market value with up-to-date criteria, real comparables and document analysis. Three levels to suit your needs."}
+        </p>
+      </div>
+
+      {/* PACKS */}
+      <section className="sec" style={{background:"#faf6f0"}}>
+        <div className="sb3">
+          <div style={{textAlign:"center",marginBottom:"2.5rem"}}>
+            <div className="stag stag-l">{es?"Elegí tu plan":"Choose your plan"}</div>
+            <h3 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"2rem",color:"#0f0a06",marginTop:".5rem"}}>{es?"Planes de valoración":"Valuation plans"}</h3>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"1.2rem",alignItems:"stretch"}}>
+            {(es?[
+              {plan:"Básico",precio:"Gratis",plazo:"48 hs",icon:"📋",color:"#6b5240",bg:"white",border:"rgba(107,82,64,.2)",desc:"Estimación orientativa del valor de tu terreno.",items:["Análisis de zona general","Rango de precio estimado","Respuesta por WhatsApp","Sin informe escrito"],cta:"Solicitar gratis",highlight:false},
+              {plan:"Estándar",precio:"Consultar",plazo:"5 días",icon:"📊",color:"#c06a22",bg:"#fff9f4",border:"rgba(192,106,34,.4)",desc:"Tasación completa con informe escrito y fundamentos.",items:["Todo lo del plan Básico","Análisis documental (escritura, impuestos)","Comparables de ventas reales","Informe escrito PDF","Valor de mercado justificado"],cta:"Solicitar",highlight:true},
+              {plan:"Premium",precio:"Consultar",plazo:"7 días",icon:"🏆",color:"#8a4db5",bg:"#0f0a06",border:"rgba(138,77,181,.5)",desc:"Informe completo con visita técnica y asesoramiento legal.",items:["Todo lo del plan Estándar","Visita al terreno","Análisis catastral y registral","Asesoramiento jurídico","Informe premium sellado","Seguimiento post-valoración"],cta:"Solicitar Premium",highlight:false,dark:true}
+            ]:[
+              {plan:"Basic",precio:"Free",plazo:"48 hrs",icon:"📋",color:"#6b5240",bg:"white",border:"rgba(107,82,64,.2)",desc:"Indicative estimate of your land's value.",items:["General area analysis","Estimated price range","WhatsApp response","No written report"],cta:"Request free",highlight:false},
+              {plan:"Standard",precio:"Inquire",plazo:"5 days",icon:"📊",color:"#c06a22",bg:"#fff9f4",border:"rgba(192,106,34,.4)",desc:"Full appraisal with written report and rationale.",items:["Everything in Basic","Document analysis (deed, taxes)","Real sales comparables","PDF written report","Justified market value"],cta:"Request",highlight:true},
+              {plan:"Premium",precio:"Inquire",plazo:"7 days",icon:"🏆",color:"#8a4db5",bg:"#0f0a06",border:"rgba(138,77,181,.5)",desc:"Full report with site visit and legal advisory.",items:["Everything in Standard","On-site visit","Cadastral & registry analysis","Legal advisory","Sealed premium report","Post-valuation follow-up"],cta:"Request Premium",highlight:false,dark:true}
+            ]).map((p,i)=>(
+              <div key={i} style={{background:p.bg,border:`2px solid ${p.highlight?"#c06a22":p.border}`,borderRadius:14,padding:"1.8rem",position:"relative",display:"flex",flexDirection:"column",boxShadow:p.highlight?"0 8px 32px rgba(192,106,34,.2)":"0 2px 12px rgba(0,0,0,.06)"}}>
+                {p.highlight&&<div style={{position:"absolute",top:"-1px",left:"50%",transform:"translateX(-50%)",background:"#c06a22",color:"white",fontSize:".62rem",fontWeight:700,letterSpacing:".12em",textTransform:"uppercase",padding:".25rem .9rem",borderRadius:"0 0 6px 6px"}}>{es?"Más elegido":"Most popular"}</div>}
+                <div style={{fontSize:"2rem",marginBottom:".7rem"}}>{p.icon}</div>
+                <div style={{fontSize:".65rem",letterSpacing:".14em",textTransform:"uppercase",color:p.color,fontWeight:700,marginBottom:".3rem"}}>{p.plan}</div>
+                <div style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"1.8rem",color:p.dark?"#f5ede0":"#0f0a06",fontWeight:700,marginBottom:".2rem"}}>{p.precio}</div>
+                <div style={{fontSize:".75rem",color:p.dark?"rgba(245,237,224,.45)":"#8a6a4a",marginBottom:"1rem"}}>⏱ {es?"Entrega en":"Delivery in"} {p.plazo}</div>
+                <p style={{fontSize:".82rem",color:p.dark?"rgba(245,237,224,.6)":"#6b5240",lineHeight:1.6,marginBottom:"1.2rem"}}>{p.desc}</p>
+                <ul style={{listStyle:"none",padding:0,margin:"0 0 1.5rem",display:"flex",flexDirection:"column",gap:".5rem",flex:1}}>
+                  {p.items.map((it,j)=>(
+                    <li key={j} style={{display:"flex",alignItems:"flex-start",gap:".5rem",fontSize:".8rem",color:p.dark?"rgba(245,237,224,.7)":"#3d2010"}}>
+                      <span style={{color:p.color,flexShrink:0,marginTop:".05rem"}}>✓</span>{it}
+                    </li>
+                  ))}
+                </ul>
+                <button onClick={()=>document.getElementById("val-form").scrollIntoView({behavior:"smooth"})}
+                  style={{background:p.highlight?"#c06a22":p.dark?"rgba(138,77,181,.25)":"transparent",color:p.highlight?"white":p.color,border:`1.5px solid ${p.color}`,borderRadius:7,padding:".7rem",fontFamily:"'Jost',sans-serif",fontWeight:700,fontSize:".82rem",cursor:"pointer",transition:"all .2s",letterSpacing:".04em"}}>
+                  {p.cta} →
+                </button>
               </div>
-            </div>
-            <button type="submit" className="bsub">{es?"Solicitar valoración":"Request valuation"}</button>
-          </form>
+            ))}
+          </div>
         </div>
-      </div></section>
+      </section>
+
+      {/* QUÉ INCLUYE */}
+      <section className="sec" style={{background:"#0f0a06",padding:"4rem 2rem"}}>
+        <div className="sb3">
+          <div style={{textAlign:"center",marginBottom:"2.5rem"}}>
+            <h3 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"2rem",color:"#f5ede0"}}>{es?"Nuestro proceso de valoración":"Our valuation process"}</h3>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:"1rem"}}>
+            {(es?[["📍","Análisis de zona","Mercado local, accesos, servicios e infraestructura disponible.","#e8a84c"],["📄","Estado documental","Escritura, impuestos, mensura, estado registral e inhibiciones.","#4285f4"],["💹","Comparables reales","Ventas recientes en la zona para determinar el precio justo.","#2d6a3f"],["📋","Informe escrito","Documento formal con fundamentos y valor de mercado justificado.","#c06a22"]]:[["📍","Zone analysis","Local market, access, services and infrastructure.","#e8a84c"],["📄","Doc status","Deed, taxes, survey and registry status.","#4285f4"],["💹","Real comparables","Recent sales in the area to determine fair price.","#2d6a3f"],["📋","Written report","Formal document with rationale and justified market value.","#c06a22"]]).map(([ic,ti,de,col],i)=>(
+              <div key={i} style={{background:"rgba(255,255,255,.04)",border:"1px solid rgba(192,106,34,.18)",borderRadius:10,padding:"1.4rem"}}>
+                <div style={{fontSize:"1.6rem",marginBottom:".6rem"}}>{ic}</div>
+                <h4 style={{color:col,fontSize:".88rem",fontWeight:700,marginBottom:".35rem"}}>{ti}</h4>
+                <p style={{color:"rgba(245,237,224,.55)",fontSize:".8rem",lineHeight:1.7,margin:0}}>{de}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FORMULARIO */}
+      <section className="sec" style={{background:"#faf6f0"}} id="val-form">
+        <div className="sb3">
+          <div style={{textAlign:"center",marginBottom:"2rem"}}>
+            <div className="stag stag-l">{es?"Solicitar valoración":"Request valuation"}</div>
+            <h3 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"2rem",color:"#0f0a06",marginTop:".5rem"}}>{es?"Contanos sobre tu propiedad":"Tell us about your property"}</h3>
+          </div>
+          <div className="fc" style={{maxWidth:640,margin:"0 auto"}}>
+            <form onSubmit={e=>sub(e,es?"Solicitud de valoración":"Valuation request")}>
+              <div className="fr">
+                <div className="fg"><label className="lb lb-d">{es?"Nombre":"Name"}</label><input className="fi fi-l" placeholder={es?"Tu nombre":"Your name"} value={vf.nombre} onChange={e=>setVf({...vf,nombre:e.target.value})}/></div>
+                <div className="fg"><label className="lb lb-d">Email</label><input className="fi fi-l" type="email" placeholder="tu@email.com" value={vf.email} onChange={e=>setVf({...vf,email:e.target.value})}/></div>
+              </div>
+              <div className="fr">
+                <div className="fg"><label className="lb lb-d">{es?"Teléfono":"Phone"}</label><input className="fi fi-l" placeholder="+54 9 ..." value={vf.tel} onChange={e=>setVf({...vf,tel:e.target.value})}/></div>
+                <div className="fg"><label className="lb lb-d">{es?"Provincia":"Province"}</label><input className="fi fi-l" placeholder="Chaco, Salta..." value={vf.prov} onChange={e=>setVf({...vf,prov:e.target.value})}/></div>
+              </div>
+              <div className="fr">
+                <div className="fg"><label className="lb lb-d">{es?"Superficie":"Surface"}</label><input className="fi fi-l" placeholder="2 Ha / 5.000 m²" value={vf.sup} onChange={e=>setVf({...vf,sup:e.target.value})}/></div>
+                <div className="fg"><label className="lb lb-d">{es?"Plan elegido":"Selected plan"}</label>
+                  <select className="fse fse-l" value={vf.tipo} onChange={e=>setVf({...vf,tipo:e.target.value})}>
+                    <option value="">{es?"Seleccioná...":"Select..."}</option>
+                    <option>{es?"Básico (Gratis)":"Basic (Free)"}</option>
+                    <option>{es?"Estándar":"Standard"}</option>
+                    <option>{es?"Premium":"Premium"}</option>
+                  </select>
+                </div>
+              </div>
+              <div className="fg"><label className="lb lb-d">{es?"Descripción de la propiedad":"Property description"}</label><textarea className="fta fta-l" placeholder={es?"Ubicación, accesos, estado legal, precio esperado...":"Location, access, legal status, expected price..."} value={vf.desc||""} onChange={e=>setVf({...vf,desc:e.target.value})}/></div>
+              <button type="submit" className="bsub">{es?"Solicitar valoración →":"Request valuation →"}</button>
+            </form>
+          </div>
+        </div>
+      </section>
     </div>}
 
     {page==="averiguaciones"&&<div style={{paddingTop:64}}>
