@@ -846,27 +846,95 @@ async function geocodeTerrain(t) {
     </div>}
 
     {page==="averiguaciones"&&<div style={{paddingTop:64}}>
-      <div className="sh2"><div className="stag stag-l">{es?"Gestión y asesoramiento":"Management & advice"}</div>
-      <h2 className="stit stit-l">{t.averTitle} <em>{t.averTitleEm}</em></h2></div>
-      <section className="sec sc"><div className="sb3">
-        <div className="ig">{(es?[["🔍","Averiguación de dominio","Verificamos el estado registral: titular, gravámenes, inhibiciones e hipotecas."],["📑","Estado catastral","Datos catastrales, mensura y superficie registrada."],["⚖️","Asesoramiento legal","Orientación sobre cesión, escrituración y regularización."],["🏛️","Gestiones registrales","Asistencia en trámites ante el Registro de la Propiedad."]]:
-          [["🔍","Title search","We verify owner, liens, encumbrances and mortgages."],["📑","Cadastral status","Cadastral data, survey and registered area."],["⚖️","Legal advice","Guidance on assignment, titling and regularization."],["🏛️","Registry procedures","Assistance with Property Registry procedures."]]).map(([ic,ti,de],i)=>(
-          <div className="ic2" key={i}><div style={{fontSize:"1.8rem",marginBottom:"0.6rem"}}>{ic}</div><h4>{ti}</h4><p>{de}</p></div>
-        ))}</div>
-        <div style={{marginTop:"2rem"}}>
-          <h3 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"1.5rem",marginBottom:"1rem",color:"#0f0a06"}}>FAQ</h3>
-          {(es?[["¿Qué es la averiguación de dominio?","Consulta al Registro de la Propiedad Inmueble para conocer el titular registral y si el inmueble tiene hipotecas, embargos u otras restricciones."],["¿Por qué es importante antes de comprar?","Garantiza que el vendedor es el dueño, que el bien no tiene deudas y protege tu inversión."],["¿Cuánto demora?","Una averiguación básica puede obtenerse en 24-48 horas hábiles."],["¿Asesoran a compradores del exterior?","Sí. Trabajamos con compradores de cualquier país. Los trámites pueden gestionarse de forma remota."]]:
-          [["What is a title search?","A query to the Property Registry to find the registered owner and whether the property has mortgages, liens or restrictions."],["Why is it important before buying?","It ensures the seller is the actual owner, the property has no debts, and it protects your investment."],["How long does it take?","A basic search can be obtained within 24-48 business hours."],["Do you assist international buyers?","Yes. We work with buyers from any country. Procedures can be managed remotely."]]).map(([q,a],i)=>(
+      {/* HERO */}
+      <div style={{background:"linear-gradient(135deg,#1a0d02 0%,#2d1708 50%,#1a0d02 100%)",padding:"4rem 2rem",textAlign:"center",position:"relative",overflow:"hidden"}}>
+        <div style={{position:"absolute",inset:0,background:"radial-gradient(ellipse at 50% 0%,rgba(192,106,34,.15) 0%,transparent 65%)",pointerEvents:"none"}}/>
+        <div className="stag stag-l" style={{marginBottom:"1rem",display:"inline-flex"}}>{es?"Gestión y asesoramiento":"Management & advice"}</div>
+        <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(2.2rem,4vw,3.5rem)",color:"#f5ede0",lineHeight:1.1,marginBottom:"1.2rem"}}>
+          {es?"Averiguá todo sobre":"Find out everything about"}<br/><em style={{color:"#e8a84c",fontStyle:"italic"}}>{es?"tu propiedad":"your property"}</em>
+        </h2>
+        <p style={{color:"rgba(245,237,224,.65)",fontSize:"1rem",lineHeight:1.8,maxWidth:540,margin:"0 auto"}}>
+          {es?"Verificamos el estado registral, catastral y legal de cualquier inmueble en Argentina. Comprás con seguridad y sin sorpresas.":"We verify the registry, cadastral and legal status of any property in Argentina. Buy safely, without surprises."}
+        </p>
+      </div>
+
+      {/* PACKS */}
+      <section className="sec" style={{background:"#faf6f0"}}>
+        <div className="sb3">
+          <div style={{textAlign:"center",marginBottom:"2.5rem"}}>
+            <div className="stag stag-l">{es?"Servicios disponibles":"Available services"}</div>
+            <h3 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"2rem",color:"#0f0a06",marginTop:".5rem"}}>{es?"Elegí tu gestión":"Choose your service"}</h3>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"1.2rem",alignItems:"stretch"}}>
+            {(es?[
+              {plan:"Consulta Básica",precio:"Gratis",plazo:"24-48 hs",icon:"🔍",color:"#6b5240",bg:"white",border:"rgba(107,82,64,.2)",desc:"Verificación inicial del estado registral de una propiedad.",items:["Titular registral actual","Existencia de hipotecas o embargos","Inhibiciones generales","Respuesta por WhatsApp"],cta:"Consultar gratis",highlight:false},
+              {plan:"Informe Completo",precio:PRECIOS.estandar[moneda],plazo:"3-5 días",icon:"📋",color:"#c06a22",bg:"#fff9f4",border:"rgba(192,106,34,.4)",desc:"Informe detallado con estado registral, catastral y documental.",items:["Todo lo de Consulta Básica","Estado catastral y mensura","Verificación de impuestos","Informe escrito PDF","Historial de titularidad"],cta:"Obtener informe",highlight:true,stripe:STRIPE.estandar[moneda]},
+              {plan:"Gestión Premium",precio:PRECIOS.premium[moneda],plazo:"5-7 días",icon:"⚖️",color:"#8a4db5",bg:"#0f0a06",border:"rgba(138,77,181,.5)",desc:"Gestión completa con asesoramiento legal y trámites registrales.",items:["Todo lo del Informe Completo","Asesoramiento jurídico personalizado","Gestiones ante el Registro","Análisis de cesión y escrituración","Asistencia para compradores del exterior","Seguimiento hasta cierre"],cta:"Gestión completa",highlight:false,dark:true,stripe:STRIPE.premium[moneda]}
+            ]:[
+              {plan:"Basic Inquiry",precio:"Free",plazo:"24-48 hrs",icon:"🔍",color:"#6b5240",bg:"white",border:"rgba(107,82,64,.2)",desc:"Initial verification of a property's registry status.",items:["Current registered owner","Mortgages or liens","General encumbrances","WhatsApp response"],cta:"Inquire free",highlight:false},
+              {plan:"Full Report",precio:PRECIOS.estandar[moneda],plazo:"3-5 days",icon:"📋",color:"#c06a22",bg:"#fff9f4",border:"rgba(192,106,34,.4)",desc:"Detailed report with registry, cadastral and document status.",items:["Everything in Basic","Cadastral status & survey","Tax verification","PDF written report","Ownership history"],cta:"Get report",highlight:true,stripe:STRIPE.estandar[moneda]},
+              {plan:"Premium Service",precio:PRECIOS.premium[moneda],plazo:"5-7 days",icon:"⚖️",color:"#8a4db5",bg:"#0f0a06",border:"rgba(138,77,181,.5)",desc:"Full management with legal advisory and registry procedures.",items:["Everything in Full Report","Personalized legal advisory","Registry procedures","Assignment & titling analysis","Assistance for foreign buyers","Follow-up until closing"],cta:"Full management",highlight:false,dark:true,stripe:STRIPE.premium[moneda]}
+            ]).map((p,i)=>(
+              <div key={i} style={{background:p.bg,border:`2px solid ${p.highlight?"#c06a22":p.border}`,borderRadius:14,padding:"1.8rem",position:"relative",display:"flex",flexDirection:"column",boxShadow:p.highlight?"0 8px 32px rgba(192,106,34,.2)":"0 2px 12px rgba(0,0,0,.06)"}}>
+                {p.highlight&&<div style={{position:"absolute",top:"-1px",left:"50%",transform:"translateX(-50%)",background:"#c06a22",color:"white",fontSize:".62rem",fontWeight:700,letterSpacing:".12em",textTransform:"uppercase",padding:".25rem .9rem",borderRadius:"0 0 6px 6px"}}>{es?"Más solicitado":"Most requested"}</div>}
+                <div style={{fontSize:"2rem",marginBottom:".7rem"}}>{p.icon}</div>
+                <div style={{fontSize:".65rem",letterSpacing:".14em",textTransform:"uppercase",color:p.color,fontWeight:700,marginBottom:".3rem"}}>{p.plan}</div>
+                <div style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"1.8rem",color:p.dark?"#f5ede0":"#0f0a06",fontWeight:700,marginBottom:".2rem"}}>{p.precio}</div>
+                <div style={{fontSize:".75rem",color:p.dark?"rgba(245,237,224,.45)":"#8a6a4a",marginBottom:"1rem"}}>⏱ {es?"Entrega en":"Delivery in"} {p.plazo}</div>
+                <p style={{fontSize:".82rem",color:p.dark?"rgba(245,237,224,.6)":"#6b5240",lineHeight:1.6,marginBottom:"1.2rem"}}>{p.desc}</p>
+                <ul style={{listStyle:"none",padding:0,margin:"0 0 1.5rem",display:"flex",flexDirection:"column",gap:".5rem",flex:1}}>
+                  {p.items.map((it,j)=>(
+                    <li key={j} style={{display:"flex",alignItems:"flex-start",gap:".5rem",fontSize:".8rem",color:p.dark?"rgba(245,237,224,.7)":"#3d2010"}}>
+                      <span style={{color:p.color,flexShrink:0,marginTop:".05rem"}}>✓</span>{it}
+                    </li>
+                  ))}
+                </ul>
+                <button onClick={()=>p.stripe?window.open(p.stripe,"_blank"):go("contacto")}
+                  style={{background:p.highlight?"#c06a22":p.dark?"rgba(138,77,181,.25)":"transparent",color:p.highlight?"white":p.color,border:`1.5px solid ${p.color}`,borderRadius:7,padding:".7rem",fontFamily:"'Jost',sans-serif",fontWeight:700,fontSize:".82rem",cursor:"pointer",transition:"all .2s",letterSpacing:".04em"}}>
+                  {p.stripe?(es?"💳 Pagar ahora →":"💳 Pay now →"):(es?"Consultar gratis →":"Inquire free →")}
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* QUÉ INCLUYE */}
+      <section className="sec" style={{background:"#0f0a06",padding:"4rem 2rem"}}>
+        <div className="sb3">
+          <div style={{textAlign:"center",marginBottom:"2.5rem"}}>
+            <h3 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"2rem",color:"#f5ede0"}}>{es?"¿Qué verificamos?":"What we verify"}</h3>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:"1rem"}}>
+            {(es?[["🔍","Dominio registral","Titular, historial de propietarios, cesiones previas.","#e8a84c"],["⚖️","Gravámenes","Hipotecas, embargos, inhibiciones y restricciones.","#4285f4"],["📑","Estado catastral","Mensura, superficie real, parcela y subdivisión.","#2d6a3f"],["🏛️","Gestiones","Trámites ante Registro, Catastro y organismos oficiales.","#c06a22"]]:[["🔍","Registry title","Owner, ownership history, prior assignments.","#e8a84c"],["⚖️","Encumbrances","Mortgages, liens, encumbrances and restrictions.","#4285f4"],["📑","Cadastral status","Survey, actual area, parcel and subdivision.","#2d6a3f"],["🏛️","Procedures","Registry, Cadastre and official agency procedures.","#c06a22"]]).map(([ic,ti,de,col],i)=>(
+              <div key={i} style={{background:"rgba(255,255,255,.04)",border:"1px solid rgba(192,106,34,.18)",borderRadius:10,padding:"1.4rem"}}>
+                <div style={{fontSize:"1.6rem",marginBottom:".6rem"}}>{ic}</div>
+                <h4 style={{color:col,fontSize:".88rem",fontWeight:700,marginBottom:".35rem"}}>{ti}</h4>
+                <p style={{color:"rgba(245,237,224,.55)",fontSize:".8rem",lineHeight:1.7,margin:0}}>{de}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="sec" style={{background:"#faf6f0"}}>
+        <div className="sb3" style={{maxWidth:700,margin:"0 auto"}}>
+          <div style={{textAlign:"center",marginBottom:"2rem"}}>
+            <h3 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"2rem",color:"#0f0a06"}}>FAQ</h3>
+          </div>
+          {(es?[["¿Qué es la averiguación de dominio?","Consulta al Registro de la Propiedad Inmueble para conocer el titular registral y si el inmueble tiene hipotecas, embargos u otras restricciones."],["¿Por qué es importante antes de comprar?","Garantiza que el vendedor es el dueño, que el bien no tiene deudas y protege tu inversión desde el primer día."],["¿Cuánto demora?","Una consulta básica puede obtenerse en 24-48 horas hábiles. El informe completo entre 3 y 5 días."],["¿Asesoran a compradores del exterior?","Sí. Trabajamos con compradores de cualquier país. Los trámites pueden gestionarse de forma 100% remota."]]:
+          [["What is a title search?","A query to the Property Registry to find the registered owner and whether the property has mortgages, liens or restrictions."],["Why is it important before buying?","It ensures the seller is the actual owner, the property has no debts and protects your investment from day one."],["How long does it take?","A basic inquiry takes 24-48 business hours. The full report takes 3-5 days."],["Do you assist international buyers?","Yes. We work with buyers from any country. All procedures can be handled 100% remotely."]]).map(([q,a],i)=>(
             <div className="faq-i" key={i}>
               <div className="faq-q" onClick={()=>setFaq(faq===i?null:i)}><span>{q}</span><span>{faq===i?"▲":"▼"}</span></div>
               {faq===i&&<div className="faq-a">{a}</div>}
             </div>
           ))}
+          <div style={{textAlign:"center",marginTop:"2.5rem"}}>
+            <button className="bp" onClick={()=>go("contacto")}>{es?"¿Más dudas? Escribinos":"More questions? Contact us"}</button>
+          </div>
         </div>
-        <div style={{textAlign:"center",marginTop:"2.5rem"}}>
-          <button className="bp" onClick={()=>go("contacto")}>{es?"Consultar ahora":"Inquire now"}</button>
-        </div>
-      </div></section>
+      </section>
     </div>}
 
     {page==="desarrollo"&&<div style={{paddingTop:64}}>
