@@ -611,31 +611,103 @@ async function geocodeTerrain(t) {
     </div>}
 
     {page==="ofrecer"&&<div style={{paddingTop:64}}>
-      <div className="sh2"><div className="stag stag-l">{es?"Para propietarios":"For landowners"}</div>
-      <h2 className="stit stit-l">{t.ofrecerTitle} <em>{t.ofrecerTitleEm}</em></h2>
-      <p className="sdesc sdesc-l">{t.ofrecerDesc}</p></div>
-      <section className="sec sc"><div className="sb3">
-        <div className="ig">{(es?[["📸","Publicación completa","Fotos, descripción, mapa y ficha técnica en nuestra plataforma."],["📣","Difusión nacional e internacional","Llegamos a compradores en Argentina y el exterior."],["💼","Gestión total","Coordinamos visitas, consultas y el proceso de cesión."],["💰","Sin costo inicial","Solo cobramos comisión al concretarse la venta."]]:
-          [["📸","Full listing","Photos, description, map and specs on our platform."],["📣","National & intl reach","We reach buyers in Argentina and abroad."],["💼","Full management","We coordinate visits, inquiries and the assignment process."],["💰","No upfront cost","We only charge commission when the sale closes."]]).map(([ic,ti,de],i)=>(
-          <div className="ic2" key={i}><div style={{fontSize:"1.8rem",marginBottom:"0.6rem"}}>{ic}</div><h4>{ti}</h4><p>{de}</p></div>
-        ))}</div>
-        <div className="fc" style={{marginTop:"2rem"}}>
-          <h3>{es?"Cargá tu terreno":"Submit your land"}</h3>
-          <form onSubmit={e=>sub(e,es?"Oferta de terreno":"Land offer")}>
-            <div className="fr">
-              <div className="fg"><label className="lb lb-d">{es?"Tu nombre":"Your name"}</label><input className="fi fi-l" placeholder={es?"Nombre completo":"Full name"} value={of.nombre} onChange={e=>setOf({...of,nombre:e.target.value})}/></div>
-              <div className="fg"><label className="lb lb-d">Email</label><input className="fi fi-l" type="email" placeholder="tu@email.com" value={of.email} onChange={e=>setOf({...of,email:e.target.value})}/></div>
-            </div>
-            <div className="fr">
-              <div className="fg"><label className="lb lb-d">{es?"Teléfono":"Phone"}</label><input className="fi fi-l" placeholder="+54 9 ..." value={of.tel} onChange={e=>setOf({...of,tel:e.target.value})}/></div>
-              <div className="fg"><label className="lb lb-d">{es?"Provincia":"Province"}</label><input className="fi fi-l" placeholder="Chaco, Salta..." value={of.prov} onChange={e=>setOf({...of,prov:e.target.value})}/></div>
-            </div>
-            <div className="fg"><label className="lb lb-d">{es?"Superficie aproximada":"Approx. surface"}</label><input className="fi fi-l" placeholder="2 Ha / 5.000 m²" value={of.sup} onChange={e=>setOf({...of,sup:e.target.value})}/></div>
-            <div className="fg"><label className="lb lb-d">{es?"Descripción del terreno":"Land description"}</label><textarea className="fta fta-l" placeholder={es?"Accesos, servicios, estado legal, precio esperado...":"Access, services, legal status, expected price..."} value={of.desc} onChange={e=>setOf({...of,desc:e.target.value})}/></div>
-            <button type="submit" className="bsub">{es?"Enviar oferta":"Submit offer"}</button>
-          </form>
+      {/* HERO BANNER */}
+      <div style={{background:"linear-gradient(135deg,#1a0d02 0%,#2d1708 50%,#1a0d02 100%)",padding:"4rem 2rem",textAlign:"center",position:"relative",overflow:"hidden"}}>
+        <div style={{position:"absolute",inset:0,background:"radial-gradient(ellipse at 50% 0%,rgba(192,106,34,.15) 0%,transparent 65%)",pointerEvents:"none"}}/>
+        <div className="stag stag-l" style={{marginBottom:"1rem",display:"inline-flex"}}>{es?"Para propietarios de tierra":"For landowners"}</div>
+        <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(2.2rem,4vw,3.5rem)",color:"#f5ede0",lineHeight:1.1,marginBottom:"1.2rem"}}>
+          {es?"Convertí tu terreno en":"Turn your land into"}<br/><em style={{color:"#e8a84c",fontStyle:"italic"}}>{es?"dinero, sin complicaciones":"money, hassle-free"}</em>
+        </h2>
+        <p style={{color:"rgba(245,237,224,.65)",fontSize:"1rem",lineHeight:1.8,maxWidth:560,margin:"0 auto 2rem"}}>
+          {es?"Nos encargamos de todo: tasación, publicación, gestión y cierre. Vos solo esperás el resultado. Sin costos iniciales, sin burocracia.":"We handle everything: appraisal, listing, management and closing. You just wait for the result. No upfront costs, no bureaucracy."}
+        </p>
+        <div style={{display:"flex",gap:"1.5rem",justifyContent:"center",flexWrap:"wrap"}}>
+          {(es?[["🏡","Propiedades escrituradas"],["🌍","Compradores internacionales"],["💰","Sin costo inicial"]]:[["🏡","Titled properties"],["🌍","International buyers"],["💰","No upfront cost"]]).map(([ic,lb],i)=>(
+            <div key={i} style={{display:"flex",alignItems:"center",gap:".5rem",background:"rgba(192,106,34,.12)",border:"1px solid rgba(192,106,34,.3)",borderRadius:"2rem",padding:".35rem 1rem",color:"#e8a84c",fontSize:".78rem",fontWeight:600}}>{ic} {lb}</div>
+          ))}
         </div>
-      </div></section>
+      </div>
+
+      {/* CÓMO FUNCIONA */}
+      <section className="sec" style={{background:"#faf6f0"}}>
+        <div className="sb3">
+          <div style={{textAlign:"center",marginBottom:"2.5rem"}}>
+            <div className="stag stag-l">{es?"El proceso":"The process"}</div>
+            <h3 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"2rem",color:"#0f0a06",marginTop:".5rem"}}>{es?"Así de simple":"That simple"}</h3>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:"1.5rem"}}>
+            {(es?[["01","Nos contactás","Completás el formulario con los datos básicos de tu terreno.","📋"],["02","Tasamos","Analizamos el mercado y determinamos el valor real.","📊"],["03","Publicamos","Tu terreno aparece en nuestra plataforma y llega a miles de compradores.","🌍"],["04","Cerramos","Coordinamos la cesión y recibís el pago. Nosotros cobramos solo al vender.","✅"]]:[["01","Contact us","Fill the form with your land details.","📋"],["02","We appraise","We analyze the market and determine fair value.","📊"],["03","We list","Your land reaches thousands of buyers on our platform.","🌍"],["04","We close","We coordinate the transfer and you get paid.","✅"]]).map(([num,ti,de,ic],i)=>(
+              <div key={i} style={{background:"white",borderRadius:12,padding:"1.5rem",boxShadow:"0 2px 16px rgba(0,0,0,.06)",border:"1px solid rgba(192,106,34,.12)",position:"relative",overflow:"hidden"}}>
+                <div style={{position:"absolute",top:"-.5rem",right:"-.5rem",fontFamily:"'Cormorant Garamond',serif",fontSize:"4rem",color:"rgba(192,106,34,.08)",fontWeight:700,lineHeight:1}}>{num}</div>
+                <div style={{fontSize:"1.8rem",marginBottom:".7rem"}}>{ic}</div>
+                <div style={{fontSize:".65rem",letterSpacing:".14em",textTransform:"uppercase",color:"#c06a22",fontWeight:700,marginBottom:".3rem"}}>Paso {num}</div>
+                <h4 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"1.15rem",color:"#0f0a06",marginBottom:".4rem"}}>{ti}</h4>
+                <p style={{color:"#6b5240",fontSize:".83rem",lineHeight:1.7,margin:0}}>{de}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* BENEFICIOS */}
+      <section className="sec" style={{background:"#0f0a06",padding:"4rem 2rem"}}>
+        <div className="sb3">
+          <div style={{textAlign:"center",marginBottom:"2.5rem"}}>
+            <h3 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"2rem",color:"#f5ede0"}}>{es?"¿Por qué elegirnos?":"Why choose us?"}</h3>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:"1rem"}}>
+            {(es?[["📸","Publicación premium","Fotos profesionales, mapa interactivo y ficha completa en nuestra plataforma.","#e8a84c"],["📣","Alcance real","Compradores en Argentina, España, EEUU y el exterior.","#4285f4"],["💼","Gestión completa","Visitas, consultas, negociación y proceso de cesión. Todo lo hacemos nosotros.","#2d6a3f"],["⚡","Rapidez","La mayoría de los terrenos se venden en menos de 90 días.","#c06a22"],["🔒","Seguridad jurídica","Solo trabajamos con escrituras vigentes e impuestos al día.","#8a4db5"],["💰","Sin costo inicial","Comisión solo al concretarse la venta. Cero riesgo para vos.","#e8a84c"]]:[["📸","Premium listing","Pro photos, interactive map and full specs on our platform.","#e8a84c"],["📣","Real reach","Buyers in Argentina, Spain, USA and abroad.","#4285f4"],["💼","Full management","Visits, inquiries, negotiation and transfer. We do it all.","#2d6a3f"],["⚡","Speed","Most properties sell in under 90 days.","#c06a22"],["🔒","Legal security","We only work with valid deeds and paid taxes.","#8a4db5"],["💰","No upfront cost","Commission only when the sale closes. Zero risk for you.","#e8a84c"]]).map(([ic,ti,de,col],i)=>(
+              <div key={i} style={{background:"rgba(255,255,255,.04)",border:"1px solid rgba(192,106,34,.18)",borderRadius:10,padding:"1.4rem",transition:"all .2s"}}>
+                <div style={{fontSize:"1.6rem",marginBottom:".6rem"}}>{ic}</div>
+                <h4 style={{color:col,fontSize:".88rem",fontWeight:700,marginBottom:".35rem",letterSpacing:".02em"}}>{ti}</h4>
+                <p style={{color:"rgba(245,237,224,.55)",fontSize:".8rem",lineHeight:1.7,margin:0}}>{de}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FORMULARIO */}
+      <section className="sec" style={{background:"#faf6f0"}}>
+        <div className="sb3">
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"3rem",alignItems:"start"}}>
+            {/* Left info */}
+            <div>
+              <div className="stag stag-l" style={{marginBottom:"1rem"}}>{es?"Contacto directo":"Direct contact"}</div>
+              <h3 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"2rem",color:"#0f0a06",lineHeight:1.2,marginBottom:"1.2rem"}}>
+                {es?"Contanos sobre tu terreno":"Tell us about your land"}
+              </h3>
+              <p style={{color:"#6b5240",fontSize:".9rem",lineHeight:1.8,marginBottom:"2rem"}}>
+                {es?"Completá el formulario y nos ponemos en contacto en menos de 24 horas. Sin compromiso.":"Fill the form and we'll get back to you within 24 hours. No commitment."}
+              </p>
+              <div style={{display:"flex",flexDirection:"column",gap:"1rem"}}>
+                {(es?[["📞","Respondemos en menos de 24hs"],["🤝","Sin compromisos ni contratos iniciales"],["📍","Operamos en todo el país"]]:[["📞","We respond within 24h"],["🤝","No initial commitments"],["📍","We operate nationwide"]]).map(([ic,lb],i)=>(
+                  <div key={i} style={{display:"flex",alignItems:"center",gap:".75rem",color:"#3d2010",fontSize:".85rem",fontWeight:500}}>
+                    <span style={{fontSize:"1.1rem"}}>{ic}</span>{lb}
+                  </div>
+                ))}
+              </div>
+            </div>
+            {/* Form */}
+            <div className="fc">
+              <h3 style={{marginBottom:"1.5rem"}}>{es?"Cargá tu terreno":"Submit your land"}</h3>
+              <form onSubmit={e=>sub(e,es?"Oferta de terreno":"Land offer")}>
+                <div className="fr">
+                  <div className="fg"><label className="lb lb-d">{es?"Tu nombre":"Your name"}</label><input className="fi fi-l" placeholder={es?"Nombre completo":"Full name"} value={of.nombre} onChange={e=>setOf({...of,nombre:e.target.value})}/></div>
+                  <div className="fg"><label className="lb lb-d">Email</label><input className="fi fi-l" type="email" placeholder="tu@email.com" value={of.email} onChange={e=>setOf({...of,email:e.target.value})}/></div>
+                </div>
+                <div className="fr">
+                  <div className="fg"><label className="lb lb-d">{es?"Teléfono":"Phone"}</label><input className="fi fi-l" placeholder="+54 9 ..." value={of.tel} onChange={e=>setOf({...of,tel:e.target.value})}/></div>
+                  <div className="fg"><label className="lb lb-d">{es?"Provincia":"Province"}</label><input className="fi fi-l" placeholder="Chaco, Salta..." value={of.prov} onChange={e=>setOf({...of,prov:e.target.value})}/></div>
+                </div>
+                <div className="fg"><label className="lb lb-d">{es?"Superficie aproximada":"Approx. surface"}</label><input className="fi fi-l" placeholder="2 Ha / 5.000 m²" value={of.sup} onChange={e=>setOf({...of,sup:e.target.value})}/></div>
+                <div className="fg"><label className="lb lb-d">{es?"Descripción del terreno":"Land description"}</label><textarea className="fta fta-l" placeholder={es?"Accesos, servicios, estado legal, precio esperado...":"Access, services, legal status, expected price..."} value={of.desc} onChange={e=>setOf({...of,desc:e.target.value})}/></div>
+                <button type="submit" className="bsub">{es?"Enviar oferta →":"Submit offer →"}</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>}
 
     {page==="valoracion"&&<div style={{paddingTop:64}}>
