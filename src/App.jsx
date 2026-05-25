@@ -456,11 +456,20 @@ async function geocodeTerrain(t) {
     } catch(e) { return 'EUR'; }
   });
 
+  // Stripe links - Valoración
   const STRIPE = {
     estandar: { EUR: 'https://buy.stripe.com/eVqaEWcrpaJY5tffng6Ri00', USD: 'https://buy.stripe.com/eVqaEW0IH7xMaNz0sm6Ri03' },
     premium:  { EUR: 'https://buy.stripe.com/9B6fZgbnl7xM6xj7UO6Ri01', USD: 'https://buy.stripe.com/00w4gy4YXf0ecVHgrk6Ri04' },
   };
-  const PRECIOS = { estandar: { EUR: '€35', USD: 'USD 39' }, premium: { EUR: '€89', USD: 'USD 99' } };
+  // Stripe links - Averiguaciones
+  const STRIPE_AVER = {
+    estandar: { EUR: 'https://buy.stripe.com/9B67sK77505kbRD5MG6Ri05', USD: 'https://buy.stripe.com/5kQcN4ajhbO2f3P1wq6Ri06' },
+    premium:  { EUR: 'https://buy.stripe.com/8x2fZgdvt5pEdZL4IC6Ri07', USD: 'https://buy.stripe.com/8x2cN41ML4lA1cZdf86Ri08' },
+  };
+  // Precios Valoración
+  const PRECIOS = { estandar: { EUR: '€45', USD: 'USD 49' }, premium: { EUR: '€89', USD: 'USD 99' } };
+  // Precios Averiguaciones
+  const PRECIOS_AVER = { estandar: { EUR: '€35', USD: 'USD 39' }, premium: { EUR: '€120', USD: 'USD 130' } };
   const go=(p)=>{setPage(p);setSel(null);window.scrollTo(0,0);};
   const fil=data.filter(p=>{const q=srch.toLowerCase();const ms=p.nombre.toLowerCase().includes(q)||p.ubicacion.toLowerCase().includes(q)||p.zona.toLowerCase().includes(q);const mf=filt==="Todos"||p.disponibilidad===filt;return ms&&mf;});
   async function save(){
@@ -765,7 +774,7 @@ async function geocodeTerrain(t) {
             ]:[
               {plan:"Basic",precio:"Free",plazo:"48 hrs",icon:"📋",color:"#6b5240",bg:"white",border:"rgba(107,82,64,.2)",desc:"Indicative estimate of your land's value.",items:["General area analysis","Estimated price range","WhatsApp response","No written report"],cta:"Request free",highlight:false},
               {plan:"Standard",precio:PRECIOS.estandar[moneda],plazo:"5 days",icon:"📊",color:"#c06a22",bg:"#fff9f4",border:"rgba(192,106,34,.4)",desc:"Full appraisal with written report and rationale.",items:["Everything in Basic","Document analysis (deed, taxes)","Real sales comparables","PDF written report","Justified market value"],cta:"Request",highlight:true,stripe:STRIPE.estandar[moneda]},
-              {plan:"Premium",precio:PRECIOS.premium[moneda],plazo:"7 days",icon:"🏆",color:"#8a4db5",bg:"#0f0a06",border:"rgba(138,77,181,.5)",desc:"Full report with site visit and legal advisory.",items:["Everything in Standard","On-site visit","Cadastral & registry analysis","Legal advisory","Sealed premium report","Post-valuation follow-up"],cta:"Request Premium",highlight:false,dark:true,stripe:STRIPE_AVER.premium[moneda]}
+              {plan:"Premium",precio:PRECIOS.premium[moneda],plazo:"7 days",icon:"🏆",color:"#8a4db5",bg:"#0f0a06",border:"rgba(138,77,181,.5)",desc:"Full report with site visit and legal advisory.",items:["Everything in Standard","On-site visit","Cadastral & registry analysis","Legal advisory","Sealed premium report","Post-valuation follow-up"],cta:"Request Premium",highlight:false,dark:true,stripe:STRIPE.premium[moneda]}
             ]).map((p,i)=>(
               <div key={i} style={{background:p.bg,border:`2px solid ${p.highlight?"#c06a22":p.border}`,borderRadius:14,padding:"1.8rem",position:"relative",display:"flex",flexDirection:"column",boxShadow:p.highlight?"0 8px 32px rgba(192,106,34,.2)":"0 2px 12px rgba(0,0,0,.06)"}}>
                 {p.highlight&&<div style={{position:"absolute",top:"-1px",left:"50%",transform:"translateX(-50%)",background:"#c06a22",color:"white",fontSize:".62rem",fontWeight:700,letterSpacing:".12em",textTransform:"uppercase",padding:".25rem .9rem",borderRadius:"0 0 6px 6px"}}>{es?"Más elegido":"Most popular"}</div>}
@@ -868,12 +877,12 @@ async function geocodeTerrain(t) {
           <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"1.2rem",alignItems:"stretch"}}>
             {(es?[
               {plan:"Consulta de Dominio",precio:"Gratis",plazo:"24-48 hs",icon:"🔍",color:"#6b5240",bg:"white",border:"rgba(107,82,64,.2)",desc:"Verificación inicial del estado registral del terreno o fracción que te interesa.",items:["Titular registral del terreno","Existencia de hipotecas o embargos","Inhibiciones generales","Respuesta por WhatsApp"],cta:"Consultar gratis",highlight:false},
-              {plan:"Informe de Terreno",precio:PRECIOS_AVER.estandar[moneda],plazo:"3-5 días",icon:"📋",color:"#c06a22",bg:"#fff9f4",border:"rgba(192,106,34,.4)",desc:"Informe completo del terreno: estado registral, catastral, impuestos y documentación.",items:["Todo lo de Consulta Básica","Estado catastral y mensura","Verificación de impuestos","Informe escrito PDF","Historial de titularidad del lote/fracción"],cta:"Obtener informe",highlight:true,stripe:STRIPE.estandar[moneda]},
-              {plan:"Escrituración y Cesión",precio:PRECIOS_AVER.premium[moneda],plazo:"5-7 días",icon:"⚖️",color:"#8a4db5",bg:"#0f0a06",border:"rgba(138,77,181,.5)",desc:"Gestión completa para comprar tierra con seguridad: asesoramiento jurídico y trámites registrales.",items:["Todo lo del Informe Completo","Asesoramiento jurídico personalizado","Gestiones ante el Registro","Análisis de cesión de derechos y escrituración rural","Asistencia para compradores de Argentina y el exterior","Seguimiento hasta la cesión definitiva"],cta:"Gestión completa",highlight:false,dark:true,stripe:STRIPE.premium[moneda]}
+              {plan:"Informe de Terreno",precio:PRECIOS_AVER.estandar[moneda],plazo:"3-5 días",icon:"📋",color:"#c06a22",bg:"#fff9f4",border:"rgba(192,106,34,.4)",desc:"Informe completo del terreno: estado registral, catastral, impuestos y documentación.",items:["Todo lo de Consulta Básica","Estado catastral y mensura","Verificación de impuestos","Informe escrito PDF","Historial de titularidad del lote/fracción"],cta:"Obtener informe",highlight:true,stripe:STRIPE_AVER.estandar[moneda]},
+              {plan:"Escrituración y Cesión",precio:PRECIOS_AVER.premium[moneda],plazo:"5-7 días",icon:"⚖️",color:"#8a4db5",bg:"#0f0a06",border:"rgba(138,77,181,.5)",desc:"Gestión completa para comprar tierra con seguridad: asesoramiento jurídico y trámites registrales.",items:["Todo lo del Informe Completo","Asesoramiento jurídico personalizado","Gestiones ante el Registro","Análisis de cesión de derechos y escrituración rural","Asistencia para compradores de Argentina y el exterior","Seguimiento hasta la cesión definitiva"],cta:"Gestión completa",highlight:false,dark:true,stripe:STRIPE_AVER.premium[moneda]}
             ]:[
               {plan:"Title Search",precio:"Free",plazo:"24-48 hrs",icon:"🔍",color:"#6b5240",bg:"white",border:"rgba(107,82,64,.2)",desc:"Initial verification of the land fraction's registry status.",items:["Current registered owner","Mortgages or liens","General encumbrances","WhatsApp response"],cta:"Inquire free",highlight:false},
               {plan:"Land Report",precio:PRECIOS_AVER.estandar[moneda],plazo:"3-5 days",icon:"📋",color:"#c06a22",bg:"#fff9f4",border:"rgba(192,106,34,.4)",desc:"Full land report: registry status, cadastral data, taxes and documentation.",items:["Everything in Basic","Cadastral status & survey","Tax verification","PDF written report","Ownership history"],cta:"Get report",highlight:true,stripe:STRIPE_AVER.estandar[moneda]},
-              {plan:"Assignment & Title",precio:PRECIOS_AVER.premium[moneda],plazo:"5-7 days",icon:"⚖️",color:"#8a4db5",bg:"#0f0a06",border:"rgba(138,77,181,.5)",desc:"Complete land purchase management: legal advisory and registry procedures.",items:["Everything in Full Report","Personalized legal advisory","Registry procedures","Assignment & titling analysis","Assistance for foreign buyers","Follow-up until closing"],cta:"Full management",highlight:false,dark:true,stripe:STRIPE_AVER.premium[moneda]}
+              {plan:"Assignment & Title",precio:PRECIOS_AVER.premium[moneda],plazo:"5-7 days",icon:"⚖️",color:"#8a4db5",bg:"#0f0a06",border:"rgba(138,77,181,.5)",desc:"Complete land purchase management: legal advisory and registry procedures.",items:["Everything in Full Report","Personalized legal advisory","Registry procedures","Assignment & titling analysis","Assistance for foreign buyers","Follow-up until closing"],cta:"Full management",highlight:false,dark:true,stripe:STRIPE.premium[moneda]}
             ]).map((p,i)=>(
               <div key={i} style={{background:p.bg,border:`2px solid ${p.highlight?"#c06a22":p.border}`,borderRadius:14,padding:"1.8rem",position:"relative",display:"flex",flexDirection:"column",boxShadow:p.highlight?"0 8px 32px rgba(192,106,34,.2)":"0 2px 12px rgba(0,0,0,.06)"}}>
                 {p.highlight&&<div style={{position:"absolute",top:"-1px",left:"50%",transform:"translateX(-50%)",background:"#c06a22",color:"white",fontSize:".62rem",fontWeight:700,letterSpacing:".12em",textTransform:"uppercase",padding:".25rem .9rem",borderRadius:"0 0 6px 6px"}}>{es?"El más completo":"Most complete"}</div>}
