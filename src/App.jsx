@@ -445,6 +445,22 @@ async function geocodeTerrain(t) {
   const[vf,setVf]=useState({nombre:"",email:"",tel:"",prov:"",sup:"",tipo:""});
   const[cf,setCf]=useState({nombre:"",email:user?.email||"",tel:"",prop:"",msg:""});
   const[faq,setFaq]=useState(null);
+
+  // Detección de región para moneda
+  const [moneda, setMoneda] = useState(()=>{
+    try {
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const lang = navigator.language || '';
+      if(tz.startsWith('America/Argentina') || tz.startsWith('America/Buenos_Aires') || lang.includes('es-AR')) return 'USD';
+      return 'EUR';
+    } catch(e) { return 'EUR'; }
+  });
+
+  const STRIPE = {
+    estandar: { EUR: 'https://buy.stripe.com/eVqaEWcrpaJY5tffng6Ri00', USD: 'https://buy.stripe.com/eVqaEW0IH7xMaNz0sm6Ri03' },
+    premium:  { EUR: 'https://buy.stripe.com/9B6fZgbnl7xM6xj7UO6Ri01', USD: 'https://buy.stripe.com/00w4gy4YXf0ecVHgrk6Ri04' },
+  };
+  const PRECIOS = { estandar: { EUR: '€45', USD: 'USD 49' }, premium: { EUR: '€89', USD: 'USD 99' } };
   const go=(p)=>{setPage(p);setSel(null);window.scrollTo(0,0);};
   const fil=data.filter(p=>{const q=srch.toLowerCase();const ms=p.nombre.toLowerCase().includes(q)||p.ubicacion.toLowerCase().includes(q)||p.zona.toLowerCase().includes(q);const mf=filt==="Todos"||p.disponibilidad===filt;return ms&&mf;});
   async function save(){
@@ -728,17 +744,28 @@ async function geocodeTerrain(t) {
         <div className="sb3">
           <div style={{textAlign:"center",marginBottom:"2.5rem"}}>
             <div className="stag stag-l">{es?"Elegí tu plan":"Choose your plan"}</div>
-            <h3 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"2rem",color:"#0f0a06",marginTop:".5rem"}}>{es?"Planes de valoración":"Valuation plans"}</h3>
+            <h3 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"2rem",color:"#0f0a06",marginTop:".5rem",marginBottom:"1rem"}}>{es?"Planes de valoración":"Valuation plans"}</h3>
+            {/* Currency toggle */}
+            <div style={{display:"inline-flex",background:"#f0ebe4",borderRadius:"2rem",padding:".25rem",gap:".25rem",border:"1px solid rgba(192,106,34,.2)"}}>
+              {["EUR","USD"].map(c=>(
+                <button key={c} onClick={()=>setMoneda(c)}
+                  style={{padding:".35rem 1.1rem",borderRadius:"2rem",border:"none",cursor:"pointer",fontFamily:"'Jost',sans-serif",fontWeight:600,fontSize:".78rem",transition:"all .2s",
+                    background:moneda===c?"#c06a22":"transparent",color:moneda===c?"white":"#6b5240"}}>
+                  {c==="EUR"?"🇪🇺 EUR":"🇦🇷 USD"}
+                </button>
+              ))}
+            </div>
+            <p style={{color:"#8a6a4a",fontSize:".75rem",marginTop:".5rem"}}>{moneda==="EUR"?es?"Precios para Europa":"Prices for Europe":es?"Precios para Argentina":"Prices for Argentina"}</p>
           </div>
           <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"1.2rem",alignItems:"stretch"}}>
             {(es?[
               {plan:"Básico",precio:"Gratis",plazo:"48 hs",icon:"📋",color:"#6b5240",bg:"white",border:"rgba(107,82,64,.2)",desc:"Estimación orientativa del valor de tu terreno.",items:["Análisis de zona general","Rango de precio estimado","Respuesta por WhatsApp","Sin informe escrito"],cta:"Solicitar gratis",highlight:false},
-              {plan:"Estándar",precio:"Consultar",plazo:"5 días",icon:"📊",color:"#c06a22",bg:"#fff9f4",border:"rgba(192,106,34,.4)",desc:"Tasación completa con informe escrito y fundamentos.",items:["Todo lo del plan Básico","Análisis documental (escritura, impuestos)","Comparables de ventas reales","Informe escrito PDF","Valor de mercado justificado"],cta:"Solicitar",highlight:true},
-              {plan:"Premium",precio:"Consultar",plazo:"7 días",icon:"🏆",color:"#8a4db5",bg:"#0f0a06",border:"rgba(138,77,181,.5)",desc:"Informe completo con visita técnica y asesoramiento legal.",items:["Todo lo del plan Estándar","Visita al terreno","Análisis catastral y registral","Asesoramiento jurídico","Informe premium sellado","Seguimiento post-valoración"],cta:"Solicitar Premium",highlight:false,dark:true}
+              {plan:"Estándar",precio:PRECIOS.estandar[moneda],plazo:"5 días",icon:"📊",color:"#c06a22",bg:"#fff9f4",border:"rgba(192,106,34,.4)",desc:"Tasación completa con informe escrito y fundamentos.",items:["Todo lo del plan Básico","Análisis documental (escritura, impuestos)","Comparables de ventas reales","Informe escrito PDF","Valor de mercado justificado"],cta:"Solicitar",highlight:true,stripe:STRIPE.estandar[moneda]},
+              {plan:"Premium",precio:PRECIOS.premium[moneda],plazo:"7 días",icon:"🏆",color:"#8a4db5",bg:"#0f0a06",border:"rgba(138,77,181,.5)",desc:"Informe completo con visita técnica y asesoramiento legal.",items:["Todo lo del plan Estándar","Visita al terreno","Análisis catastral y registral","Asesoramiento jurídico","Informe premium sellado","Seguimiento post-valoración"],cta:"Solicitar Premium",highlight:false,dark:true,stripe:STRIPE.premium[moneda]}
             ]:[
               {plan:"Basic",precio:"Free",plazo:"48 hrs",icon:"📋",color:"#6b5240",bg:"white",border:"rgba(107,82,64,.2)",desc:"Indicative estimate of your land's value.",items:["General area analysis","Estimated price range","WhatsApp response","No written report"],cta:"Request free",highlight:false},
-              {plan:"Standard",precio:"Inquire",plazo:"5 days",icon:"📊",color:"#c06a22",bg:"#fff9f4",border:"rgba(192,106,34,.4)",desc:"Full appraisal with written report and rationale.",items:["Everything in Basic","Document analysis (deed, taxes)","Real sales comparables","PDF written report","Justified market value"],cta:"Request",highlight:true},
-              {plan:"Premium",precio:"Inquire",plazo:"7 days",icon:"🏆",color:"#8a4db5",bg:"#0f0a06",border:"rgba(138,77,181,.5)",desc:"Full report with site visit and legal advisory.",items:["Everything in Standard","On-site visit","Cadastral & registry analysis","Legal advisory","Sealed premium report","Post-valuation follow-up"],cta:"Request Premium",highlight:false,dark:true}
+              {plan:"Standard",precio:PRECIOS.estandar[moneda],plazo:"5 days",icon:"📊",color:"#c06a22",bg:"#fff9f4",border:"rgba(192,106,34,.4)",desc:"Full appraisal with written report and rationale.",items:["Everything in Basic","Document analysis (deed, taxes)","Real sales comparables","PDF written report","Justified market value"],cta:"Request",highlight:true,stripe:STRIPE.estandar[moneda]},
+              {plan:"Premium",precio:PRECIOS.premium[moneda],plazo:"7 days",icon:"🏆",color:"#8a4db5",bg:"#0f0a06",border:"rgba(138,77,181,.5)",desc:"Full report with site visit and legal advisory.",items:["Everything in Standard","On-site visit","Cadastral & registry analysis","Legal advisory","Sealed premium report","Post-valuation follow-up"],cta:"Request Premium",highlight:false,dark:true,stripe:STRIPE.premium[moneda]}
             ]).map((p,i)=>(
               <div key={i} style={{background:p.bg,border:`2px solid ${p.highlight?"#c06a22":p.border}`,borderRadius:14,padding:"1.8rem",position:"relative",display:"flex",flexDirection:"column",boxShadow:p.highlight?"0 8px 32px rgba(192,106,34,.2)":"0 2px 12px rgba(0,0,0,.06)"}}>
                 {p.highlight&&<div style={{position:"absolute",top:"-1px",left:"50%",transform:"translateX(-50%)",background:"#c06a22",color:"white",fontSize:".62rem",fontWeight:700,letterSpacing:".12em",textTransform:"uppercase",padding:".25rem .9rem",borderRadius:"0 0 6px 6px"}}>{es?"Más elegido":"Most popular"}</div>}
@@ -754,9 +781,9 @@ async function geocodeTerrain(t) {
                     </li>
                   ))}
                 </ul>
-                <button onClick={()=>document.getElementById("val-form").scrollIntoView({behavior:"smooth"})}
+                <button onClick={()=>p.stripe ? window.open(p.stripe,'_blank') : document.getElementById("val-form").scrollIntoView({behavior:"smooth"})}
                   style={{background:p.highlight?"#c06a22":p.dark?"rgba(138,77,181,.25)":"transparent",color:p.highlight?"white":p.color,border:`1.5px solid ${p.color}`,borderRadius:7,padding:".7rem",fontFamily:"'Jost',sans-serif",fontWeight:700,fontSize:".82rem",cursor:"pointer",transition:"all .2s",letterSpacing:".04em"}}>
-                  {p.cta} →
+                  {p.stripe ? (es?"💳 Pagar ahora →":"💳 Pay now →") : (es?"Solicitar gratis →":"Request free →")}
                 </button>
               </div>
             ))}
